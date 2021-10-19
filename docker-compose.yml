@@ -4,6 +4,7 @@ services:
     build: ./pg
     restart: always
     environment:
+      POSTGRES_DB: odclive
       POSTGRES_PASSWORD: develop
     ports:
       - 5432:5432
@@ -11,7 +12,7 @@ services:
     build: ./pm2
     environment:
       DB_HOST: db
-      DB_NAME: postgres
+      DB_NAME: odclive
       DB_USER: postgres
       DB_PASSWORD: develop
       DB_PORT: 5432

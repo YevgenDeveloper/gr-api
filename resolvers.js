@@ -13,9 +13,8 @@ module.exports = {
   Mutation: {
     login: async (_, {username, password}, {dataSources}) => {
       try {
-        const user = await models.User.where({
-          username,
-        }).fetch();
+        const user = await models.User.login(username);
+        return user;
         if (!(await bcrypt.compare(password, user.get('password')))) {
           throw new Error('bad credentials');
         }

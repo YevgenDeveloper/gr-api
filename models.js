@@ -7,6 +7,12 @@ const User = {
       });
     });
   },
+  async login(username) {
+    pool.query('select * from Users', (err, res) => {
+      console.log(err);
+    });
+    return 'jwt';
+  }
 };
 module.exports = {
   User,
