@@ -11,9 +11,9 @@ module.exports = {
       }),
   },
   Mutation: {
-    login: async (_, {username, password}, {dataSources}) => {
+    login: async (_, {name, password}, {dataSources}) => {
       try {
-        const user = await models.User.login(username);
+        const user = await models.User.login(name);
         return user;
         if (!(await bcrypt.compare(password, user.get('password')))) {
           throw new Error('bad credentials');
@@ -23,14 +23,11 @@ module.exports = {
         throw new Error('login failed');
       }
     },
-    register: async (_, {username, password}, {dataSources}) => {
+    register: async (_, {name, password}, {dataSources}) => {
       const hash = bcrypt.hashSync(password, 8);
       try {
-        const user = await new models.User({
-          name: username,
-          password: hash,
-        }).save();
-        return jwt.sign({uid: user.get('id')}, secret, {expiresIn: '2h'});
+        const uid = await models.User.register(name, hash);
+        return jwt.sign({uid: uid}, secret, {expiresIn: '2h'});
       } catch (e) {
         throw new Error('could not create user: it may already exists');
       }
