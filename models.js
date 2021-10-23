@@ -8,10 +8,10 @@ const User = {
     });
   },
   async login(username) {
-    pool.query('select * from Users', (err, res) => {
-      console.log(err);
-    });
-    return 'jwt';
+    const res = await pool.query('select * from Users where username = $1;', [
+      username,
+    ]);
+    return res.rows[0];
   },
   async register(name, password) {
     const res = await pool.query(

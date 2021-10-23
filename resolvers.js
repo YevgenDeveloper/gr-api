@@ -14,11 +14,10 @@ module.exports = {
     login: async (_, {name, password}, {dataSources}) => {
       try {
         const user = await models.User.login(name);
-        return user;
-        if (!(await bcrypt.compare(password, user.get('password')))) {
+        if (!(await bcrypt.compare(password, user.password))) {
           throw new Error('bad credentials');
         }
-        return jwt.sign({uid: user.get('id')}, secret, {expiresIn: '2h'});
+        return jwt.sign({uid: user.id}, secret, {expiresIn: '2h'});
       } catch (e) {
         throw new Error('login failed');
       }
