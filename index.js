@@ -1,7 +1,7 @@
-const { ApolloServer, gql } = require("apollo-server");
-const jwt = require("jsonwebtoken");
-const resolvers = require("./resolvers");
-const models = require("./models");
+const {ApolloServer, gql} = require('apollo-server');
+const jwt = require('jsonwebtoken');
+const resolvers = require('./resolvers');
+const models = require('./models');
 const typeDefs = gql`
   type User {
     id: String
@@ -28,12 +28,17 @@ const server = new ApolloServer({
         if (!jwt.verify(token, process.env.JWT_SECRET))
           throw new Error('Invalid token');
         const content = jwt.decode(token);
-        const user = await models.User.where('id', content.uid).fetch();
-        return {
-          authenticated: true,
-          user,
-          headers: req.headers,
-        };
+        await models.User.fetch(content.uid)
+          .then(user => {
+            return {
+              authenticated: true,
+              user,
+              headers: req.headers,
+            };
+          })
+          .catch(err => {
+            throw new Error(err.error);
+          });
       }
     }
     return {authenticated: false, headers: req.headers};

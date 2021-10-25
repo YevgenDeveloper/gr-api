@@ -1,10 +1,11 @@
 const pool = require('./pool');
 const User = {
-  fetch(id) {
-    return new Promise((resolve, reject) => {
-      resolve({
-        id: 'hello ' + id,
-      });
+  fetch(uid) {
+    return new Promise(async (resolve, reject) => {
+      const res = await pool.query('select * from Users where id = $1;', [uid]);
+      console.log(res.rows);
+      if (res.rows.length == 0) reject({error: 'User does not exists'});
+      else resolve(res.rows[0]);
     });
   },
   async login(username) {
