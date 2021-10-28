@@ -2,8 +2,8 @@ const pool = require('./pool');
 const User = {
   fetch(uid) {
     return new Promise(async (resolve, reject) => {
+      if(uid.length != 36) reject({error: 'Wrong token'});
       const res = await pool.query('select * from Users where id = $1;', [uid]);
-      console.log(res.rows);
       if (res.rows.length == 0) reject({error: 'User does not exists'});
       else resolve(res.rows[0]);
     });
@@ -14,10 +14,10 @@ const User = {
     ]);
     return res.rows[0];
   },
-  async register(name, password) {
+  async register(name, password, role) {
     const res = await pool.query(
-      'INSERT INTO Users VALUES(uuid_generate_v4(), $1, $2) RETURNING id',
-      [name, password],
+      'INSERT INTO Users VALUES(uuid_generate_v4(), $1, $2, $3) RETURNING id',
+      [name, password, role],
     );
     return res.rows[0].id;
   },

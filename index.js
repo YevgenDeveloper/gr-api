@@ -6,6 +6,7 @@ const typeDefs = gql`
   type User {
     id: String
     username: String
+    role: String
   }
   type Query {
     me: User
@@ -13,7 +14,7 @@ const typeDefs = gql`
   }
   type Mutation {
     login(name: String!, password: String!): String
-    register(name: String!, password: String!): String
+    register(name: String!, password: String!, role: Int!): String
   }
 `;
 const server = new ApolloServer({

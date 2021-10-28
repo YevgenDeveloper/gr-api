@@ -8,6 +8,8 @@ module.exports = {
     User: (_, {id}) =>
       models.User.fetch(id).then(res => {
         return res;
+      }).catch(err => {
+        throw new Error(err.error);
       }),
   },
   Mutation: {
@@ -22,11 +24,11 @@ module.exports = {
         throw new Error('login failed');
       }
     },
-    register: async (_, {name, password}, {dataSources}) => {
+    register: async (_, {name, password, role}, {dataSources}) => {
       const hash = bcrypt.hashSync(password, 8);
       try {
-        const uid = await models.User.register(name, hash);
-        return jwt.sign({uid: uid}, secret, {expiresIn: '2h'});
+        const uid = await models.User.register(name, hash, role);
+        return jwt.sign({uid: uid, role: role}, secret, {expiresIn: '2h'});
       } catch (e) {
         throw new Error('could not create user: it may already exists');
       }
