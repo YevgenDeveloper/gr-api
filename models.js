@@ -3,10 +3,14 @@ const User = {
   fetch(uid) {
     return new Promise(async (resolve, reject) => {
       if(uid.length != 36) reject({error: 'Wrong token'});
-      const res = await pool.query('select * from Users where id = $1;', [uid]);
+      const res = await pool.query('select id, username, role from Users where id = $1;', [uid]);
       if (res.rows.length == 0) reject({error: 'User does not exists'});
       else resolve(res.rows[0]);
     });
+  },
+  async users() {
+    const res = await pool.query('select * from Users');
+    return res.rows;
   },
   async login(username) {
     const res = await pool.query('select * from Users where username = $1;', [

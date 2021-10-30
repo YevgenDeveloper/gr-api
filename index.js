@@ -9,8 +9,8 @@ const typeDefs = gql`
     role: String
   }
   type Query {
-    me: User
     User(id: String): User
+    Users: [User]
   }
   type Mutation {
     login(name: String!, password: String!): String
@@ -29,17 +29,15 @@ const server = new ApolloServer({
         if (!jwt.verify(token, process.env.JWT_SECRET))
           throw new Error('Invalid token');
         const content = jwt.decode(token);
-        await models.User.fetch(content.uid)
-          .then(user => {
-            return {
-              authenticated: true,
-              user,
-              headers: req.headers,
-            };
-          })
-          .catch(err => {
-            throw new Error(err.error);
-          });
+        let user;
+        await models.User.fetch(content.uid).then(res => {
+          user = res;
+        });
+        return {
+          authenticated: true,
+          user,
+          headers: req.headers,
+        };
       }
     }
     return {authenticated: false, headers: req.headers};

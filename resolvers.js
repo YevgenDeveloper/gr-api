@@ -2,18 +2,22 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const models = require('./models');
 const secret = process.env.JWT_SECRET;
-const expose = item => Object.assign(item, item.serialize({shallow: true}));
 module.exports = {
   Query: {
     User: (_, {id}) =>
-      models.User.fetch(id).then(res => {
-        return res;
-      }).catch(err => {
-        throw new Error(err.error);
-      }),
+      models.User.fetch(id)
+        .then(res => {
+          return res;
+        })
+        .catch(err => {
+          throw new Error(err.error);
+        }),
+    Users: async (_, {}, {dataSources, authenticated, user, headers}) => {
+      if (authenticated && user.role == 1) return models.User.users();
+    },
   },
   Mutation: {
-    login: async (_, {name, password}, {dataSources}) => {
+    login: async (_, {name, password}) => {
       try {
         const user = await models.User.login(name);
         if (!(await bcrypt.compare(password, user.password))) {
@@ -24,7 +28,7 @@ module.exports = {
         throw new Error('login failed');
       }
     },
-    register: async (_, {name, password, role}, {dataSources}) => {
+    register: async (_, {name, password, role}) => {
       const hash = bcrypt.hashSync(password, 8);
       try {
         const uid = await models.User.register(name, hash, role);
