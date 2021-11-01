@@ -8,9 +8,17 @@ const typeDefs = gql`
     username: String
     role: String
   }
+  type Show {
+    id: String
+    name: String
+    starts_at: Int
+    ends_at: Int
+    added_by: User
+  }
   type Query {
     User(id: String): User
     Users: [User]
+    Shows: [Show]
   }
   type Mutation {
     login(name: String!, password: String!): String

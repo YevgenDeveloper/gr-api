@@ -15,17 +15,20 @@ module.exports = {
     Users: async (_, {}, {dataSources, authenticated, user, headers}) => {
       if (authenticated && user.role == 1) return models.User.users();
     },
+    Shows: (_, {}) => {
+      return models.Show.fetch();
+    }
   },
   Mutation: {
     login: async (_, {name, password}) => {
       try {
         const user = await models.User.login(name);
         if (!(await bcrypt.compare(password, user.password))) {
-          throw new Error('bad credentials');
+          throw new Error('Bad credentials');
         }
         return jwt.sign({uid: user.id}, secret, {expiresIn: '2h'});
       } catch (e) {
-        throw new Error('login failed');
+        throw new Error('Login failed');
       }
     },
     register: async (_, {name, password, role}) => {
@@ -34,7 +37,7 @@ module.exports = {
         const uid = await models.User.register(name, hash, role);
         return jwt.sign({uid: uid, role: role}, secret, {expiresIn: '2h'});
       } catch (e) {
-        throw new Error('could not create user: it may already exists');
+        throw new Error('Could not create user, it may already exists');
       }
     },
   },

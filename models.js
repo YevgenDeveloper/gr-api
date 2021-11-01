@@ -2,8 +2,11 @@ const pool = require('./pool');
 const User = {
   fetch(uid) {
     return new Promise(async (resolve, reject) => {
-      if(uid.length != 36) reject({error: 'Wrong token'});
-      const res = await pool.query('select id, username, role from Users where id = $1;', [uid]);
+      if (uid.length != 36) reject({error: 'Wrong token'});
+      const res = await pool.query(
+        'select id, username, role from Users where id = $1;',
+        [uid],
+      );
       if (res.rows.length == 0) reject({error: 'User does not exists'});
       else resolve(res.rows[0]);
     });
@@ -26,6 +29,13 @@ const User = {
     return res.rows[0].id;
   },
 };
+const Show = {
+  async fetch() {
+    const res = await pool.query('select * from Radio');
+    return res.rows;
+  },
+};
 module.exports = {
   User,
+  Show,
 };
