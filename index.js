@@ -23,6 +23,12 @@ const typeDefs = gql`
   type Mutation {
     login(name: String!, password: String!): String
     register(name: String!, password: String!, role: Int!): String
+    add_show(
+      name: String!
+      starts_at: Int!
+      ends_at: Int!
+      genres: [String]
+    ): String
   }
 `;
 const server = new ApolloServer({

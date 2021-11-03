@@ -17,7 +17,7 @@ module.exports = {
     },
     Shows: (_, {}) => {
       return models.Show.fetch();
-    }
+    },
   },
   Mutation: {
     login: async (_, {name, password}) => {
@@ -39,6 +39,12 @@ module.exports = {
       } catch (e) {
         throw new Error('Could not create user, it may already exists');
       }
+    },
+    add_show: async (_, {}, {dataSources, authenticated, user, headers}) => {
+      if (authenticated) {
+        return user.username;
+      }
+      return null;
     },
   },
 };

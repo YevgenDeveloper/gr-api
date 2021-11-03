@@ -6,8 +6,6 @@ services:
     environment:
       POSTGRES_DB: odclive
       POSTGRES_PASSWORD: develop
-    ports:
-      - 5432:5432
   api:
     build: ./pm2
     environment:
