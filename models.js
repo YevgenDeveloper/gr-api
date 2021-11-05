@@ -34,6 +34,13 @@ const Show = {
     const res = await pool.query('select * from Radio');
     return res.rows;
   },
+  async post(name, starts_at, ends_at, genres, redundancy, uid) {
+    const res = await pool.query(
+      'INSERT INTO Radio VALUES(uuid_generate_v4(), $1, $2, $3, $4, $5) RETURNING id',
+      [name, starts_at, ends_at, redundancy, uid],
+    );
+    return res.rows[0].id;
+  },
 };
 module.exports = {
   User,

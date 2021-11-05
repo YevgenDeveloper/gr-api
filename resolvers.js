@@ -40,9 +40,21 @@ module.exports = {
         throw new Error('Could not create user, it may already exists');
       }
     },
-    add_show: async (_, {}, {dataSources, authenticated, user, headers}) => {
+    add_show: async (
+      _,
+      {name, starts_at, ends_at, redundancy, genres},
+      {dataSources, authenticated, user, headers},
+    ) => {
       if (authenticated) {
-        return user.username;
+        const id = models.Show.post(
+          name,
+          starts_at,
+          ends_at,
+          genres,
+          redundancy,
+          user.uid,
+        );
+        return id;
       }
       return null;
     },

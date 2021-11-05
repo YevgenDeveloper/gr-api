@@ -11,8 +11,9 @@ const typeDefs = gql`
   type Show {
     id: String
     name: String
-    starts_at: Int
-    ends_at: Int
+    starts_at: String
+    ends_at: String
+    redundancy: Int
     added_by: User
   }
   type Query {
@@ -25,8 +26,9 @@ const typeDefs = gql`
     register(name: String!, password: String!, role: Int!): String
     add_show(
       name: String!
-      starts_at: Int!
-      ends_at: Int!
+      starts_at: String!
+      ends_at: String!
+      redundancy: Int!
       genres: [String]
     ): String
   }
