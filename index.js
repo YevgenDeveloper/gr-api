@@ -30,6 +30,7 @@ const typeDefs = gql`
       ends_at: String!
       redundancy: Int!
       genres: [String]
+      color: String!
     ): String
   }
 `;

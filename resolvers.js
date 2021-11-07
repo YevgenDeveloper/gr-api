@@ -42,7 +42,7 @@ module.exports = {
     },
     add_show: async (
       _,
-      {name, starts_at, ends_at, redundancy, genres},
+      {name, starts_at, ends_at, redundancy, genres, color},
       {dataSources, authenticated, user, headers},
     ) => {
       if (authenticated) {
@@ -52,7 +52,8 @@ module.exports = {
           ends_at,
           genres,
           redundancy,
-          user.uid,
+          color,
+          user.id,
         );
         return id;
       }

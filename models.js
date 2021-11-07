@@ -31,15 +31,21 @@ const User = {
 };
 const Show = {
   async fetch() {
-    const res = await pool.query('select * from Radio');
+    const res = await pool.query('select * from Shows');
     return res.rows;
   },
-  async post(name, starts_at, ends_at, genres, redundancy, uid) {
+  async post(name, starts_at, ends_at, genres, redundancy, color, uid) {
     const res = await pool.query(
-      'INSERT INTO Radio VALUES(uuid_generate_v4(), $1, $2, $3, $4, $5) RETURNING id',
-      [name, starts_at, ends_at, redundancy, uid],
+      'INSERT INTO Shows VALUES(uuid_generate_v4(), $1, $2, $3, $4, $5, $6) RETURNING id',
+      [name, starts_at, ends_at, redundancy, color, uid],
     );
-    return res.rows[0].id;
+    const id = res.rows[0].id;
+    await Promise.all(
+      genres.map(async g => {
+        await pool.query('select add_genre_show($1, $2)', [id, g]);
+      }),
+    );
+    return id;
   },
 };
 module.exports = {
