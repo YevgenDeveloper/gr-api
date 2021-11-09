@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const axios = require('axios');
 const models = require('./models');
 const secret = process.env.JWT_SECRET;
 module.exports = {
@@ -17,6 +18,12 @@ module.exports = {
     },
     Shows: (_, {}) => {
       return models.Show.fetch();
+    },
+    Events: (_, {}) => {
+      return models.Event.fetch();
+    },
+    Stream: (_, {}) => {
+      return 'youtube';
     },
   },
   Mutation: {

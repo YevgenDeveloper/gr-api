@@ -22,6 +22,7 @@
   "homepage": "https://gitlab.com/odclive/graph_api#readme",
   "dependencies": {
     "apollo-server": "^2.3.1",
+    "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "graphql": "^14.0.2",
     "jsonwebtoken": "^8.4.0",

@@ -14,16 +14,29 @@ const typeDefs = gql`
     starts_at: String
     ends_at: String
     redundancy: Int
+    genres: [String]
+    added_by: User
+  }
+  type Event {
+    id: String
+    name: String
+    description: String
+    starts_at: String
+    ends_at: String
+    genres: [String]
+    facebook: String
     added_by: User
   }
   type Query {
     User(id: String): User
     Users: [User]
     Shows: [Show]
+    Events: [Event]
+    Stream: String
   }
   type Mutation {
     login(name: String!, password: String!): String
-    register(name: String!, password: String!, role: Int!): String
+    register(name: String!, password: String!, role: String!): String
     add_show(
       name: String!
       starts_at: String!
@@ -31,6 +44,14 @@ const typeDefs = gql`
       redundancy: Int!
       genres: [String]
       color: String!
+    ): String
+    add_event(
+      name: String!
+      description: String
+      starts_at: String!
+      ends_at: String!
+      genres: [String]
+      facebook: String
     ): String
   }
 `;

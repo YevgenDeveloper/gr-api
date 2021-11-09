@@ -48,7 +48,14 @@ const Show = {
     return id;
   },
 };
+const Event = {
+  async fetch() {
+    const res = await pool.query('select * from Shows');
+    return res.rows;
+  },
+};
 module.exports = {
   User,
   Show,
+  Event,
 };
