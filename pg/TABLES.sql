@@ -12,6 +12,13 @@ CREATE TABLE Users(
 CREATE TABLE Genres(
   name TEXT PRIMARY KEY
 );
+CREATE TABLE Chat(
+  id SERIAL PRIMARY KEY,
+  ts timestamp,
+  ip INET,
+  username TEXT,
+  message TEXT
+);
 CREATE TABLE Events(
   id UUID PRIMARY KEY,
   name TEXT,
