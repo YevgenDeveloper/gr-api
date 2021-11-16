@@ -1,12 +1,13 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE TABLE Roles(
   name TEXT PRIMARY KEY,
   permissions INTEGER check(permissions >= 0 AND permissions <= 100)
 );
 CREATE TABLE Users(
   id UUID PRIMARY KEY,
-  username VARCHAR(64) UNIQUE,
-  password VARCHAR(128),
+  username TEXT UNIQUE,
+  password TEXT,
   role TEXT references Roles(name)
 );
 CREATE TABLE Genres(

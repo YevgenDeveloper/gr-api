@@ -36,7 +36,13 @@ const typeDefs = gql`
   }
   type Mutation {
     login(name: String!, password: String!): String
-    register(name: String!, password: String!, role: String!): String
+    register(
+      name: String!
+      password: String!
+      role: String!
+      who: String!
+      whopass: String!
+    ): String
     add_show(
       name: String!
       starts_at: String!

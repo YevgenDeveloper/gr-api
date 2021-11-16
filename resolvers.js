@@ -14,7 +14,7 @@ module.exports = {
           throw new Error(err.error);
         }),
     Users: async (_, {}, {dataSources, authenticated, user, headers}) => {
-      if (authenticated && user.role == 1) return models.User.users();
+      if (authenticated && user.role == 'admin') return models.User.users();
     },
     Shows: (_, {}) => {
       return models.Show.fetch();
@@ -33,18 +33,25 @@ module.exports = {
         if (!(await bcrypt.compare(password, user.password))) {
           throw new Error('Bad credentials');
         }
-        return jwt.sign({uid: user.id}, secret, {expiresIn: '2h'});
+        return jwt.sign({uid: user.id, role: user.role}, secret, {
+          expiresIn: '2h',
+        });
       } catch (e) {
         throw new Error('Login failed');
       }
     },
-    register: async (_, {name, password, role}) => {
+    register: async (
+      _,
+      {name, password, role, who, whopass},
+      {dataSources, authenticated, user, headers},
+    ) => {
       const hash = bcrypt.hashSync(password, 8);
       try {
-        const uid = await models.User.register(name, hash, role);
-        return jwt.sign({uid: uid, role: role}, secret, {expiresIn: '2h'});
+        const uid = await models.User.register(name, hash, role, who, whopass);
+        return `User ${name} was successfully added to database!`;
       } catch (e) {
-        throw new Error('Could not create user, it may already exists');
+        console.log(e);
+        throw new Error(e);
       }
     },
     add_show: async (
