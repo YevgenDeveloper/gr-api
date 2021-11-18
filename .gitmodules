@@ -4,3 +4,6 @@
 [submodule "app"]
 	path = app
 	url = git@gitlab.com:odclive/app.git
+[submodule "cli"]
+	path = cli
+	url = git@gitlab.com:odclive/cli.git
