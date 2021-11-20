@@ -29,15 +29,12 @@ module.exports = {
   Mutation: {
     login: async (_, {name, password}) => {
       try {
-        const user = await models.User.login(name);
-        if (!(await bcrypt.compare(password, user.password))) {
-          throw new Error('Bad credentials');
-        }
+        const user = await models.User.login(name, password);
         return jwt.sign({uid: user.id, role: user.role}, secret, {
           expiresIn: '2h',
         });
       } catch (e) {
-        throw new Error('Login failed');
+        throw new Error('Bad credentials');
       }
     },
     register: async (

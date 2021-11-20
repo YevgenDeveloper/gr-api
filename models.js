@@ -15,16 +15,20 @@ const User = {
     const res = await pool.query('select * from Users');
     return res.rows;
   },
-  async login(username) {
-    const res = await pool.query('select * from Users where username = $1;', [
-      username,
-    ]);
+  async login(username, password) {
+    const res = await pool.query(
+      'select id, username, role from login($1, $2);',
+      [username, password],
+    );
     return res.rows[0];
   },
   async register(name, password, role, who, whopass) {
-    const auth = await pool.query('select * from login($1, $2)', [who, whopass]);
-    console.log(auth.rows[0]);
-    if (auth.rows[0].role != 'admin') throw 'You have no rights to create a user';
+    const auth = await pool.query('select * from login($1, $2)', [
+      who,
+      whopass,
+    ]);
+    if (auth.rows.length == 0 || auth.rows[0].role != 'admin')
+      throw 'You have no rights to create a user';
     const res = await pool.query(
       'INSERT INTO Users VALUES(uuid_generate_v4(), $1, $2, $3) RETURNING id',
       [name, password, role],
