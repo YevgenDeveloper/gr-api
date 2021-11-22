@@ -1,0 +1,3 @@
+{
+  "live": "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=CHANNELID&eventType=live&type=video&key=YOURAPIKEY"
+}

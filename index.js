@@ -8,6 +8,11 @@ const typeDefs = gql`
     username: String
     role: String
   }
+  type Stream {
+    up: Boolean
+    embed: String
+    link: String
+  }
   type Show {
     id: String
     name: String
@@ -32,7 +37,7 @@ const typeDefs = gql`
     Users: [User]
     Shows: [Show]
     Events: [Event]
-    Stream: String
+    Stream: Stream
   }
   type Mutation {
     login(name: String!, password: String!): String

@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const models = require('./models');
+const ytkey = require('./ytapi.json');
 const secret = process.env.JWT_SECRET;
 module.exports = {
   Query: {
@@ -22,8 +23,23 @@ module.exports = {
     Events: (_, {}) => {
       return models.Event.fetch();
     },
-    Stream: (_, {}) => {
-      return 'youtube';
+    Stream: async (_, {}) => {
+      return await axios
+        .get(ytkey.live)
+        .then(res => {
+          return {
+            up: true,
+            embed: `https:
+              res.data.items[0].id.videoId
+            }`,
+            link: `https:
+              res.data.items[0].id.videoId
+            }`,
+          };
+        })
+        .catch(() => {
+          return {up: false, embed: '', link: ''};
+        });
     },
   },
   Mutation: {
