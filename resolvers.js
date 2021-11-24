@@ -25,7 +25,11 @@ module.exports = {
     },
     Stream: async (_, {}) => {
       return await axios
-        .get(ytkey.live)
+        .get(
+          `https:
+            process.env.YT_CHANNEL
+          }&eventType=live&type=video&key=${process.env.GOOGLE_KEY}`,
+        )
         .then(res => {
           return {
             up: true,
