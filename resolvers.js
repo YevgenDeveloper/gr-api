@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const models = require('./models');
-const ytkey = require('./ytapi.json');
 const secret = process.env.JWT_SECRET;
 module.exports = {
   Query: {
@@ -44,6 +43,20 @@ module.exports = {
         .catch(() => {
           return {up: false, embed: '', link: ''};
         });
+    },
+    Mixes: async (_, {}) => {
+      return await axios.get(
+        `https:
+      ).then(res => {
+        console.log(res.data.paging);
+        return {
+          next: res.data.paging.next,
+          mixes: res.data.data
+        }
+        return res.data;
+      }).catch(() => {
+        return null;
+      });
     },
   },
   Mutation: {

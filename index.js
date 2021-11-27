@@ -32,12 +32,34 @@ const typeDefs = gql`
     facebook: String
     added_by: User
   }
+  type Tag {
+    url: String
+    name: String
+    key: String
+  }
+  type Pic_Mix {
+    medium: String
+    large: String
+    medium_mobile: String
+  }
+  type Mix {
+    tags: [Tag]
+    play_count: Int,
+    key: String,
+    slug: String,
+    pictures: Pic_Mix
+  }
+  type Mixes {
+    mixes: [Mix]
+    next: String
+  }
   type Query {
     User(id: String): User
     Users: [User]
     Shows: [Show]
     Events: [Event]
     Stream: Stream
+    Mixes: Mixes
   }
   type Mutation {
     login(name: String!, password: String!): String
