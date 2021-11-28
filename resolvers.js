@@ -48,7 +48,6 @@ module.exports = {
       return await axios.get(
         `https:
       ).then(res => {
-        console.log(res.data.paging);
         return {
           next: res.data.paging.next,
           mixes: res.data.data
