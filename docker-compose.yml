@@ -21,18 +21,6 @@ services:
       - .:/app
     ports:
       - 8081:4000
-  web:
-    build: ./vuedev
-    volumes:
-      - ./cli:/app
-    ports:
-      - 8082:8080
-  app:
-    build: ./vuedev
-    volumes:
-      - ./app:/app
-    ports:
-      - 8083:8080
   chat:
     build: ./pm2
     environment:
@@ -45,3 +33,15 @@ services:
       - ./chat:/app
     ports:
       - 8080:80
+  web:
+    build: ./vuedev
+    volumes:
+      - ./admin:/app
+    ports:
+      - 8082:8080
+  app:
+    build: ./vuedev
+    volumes:
+      - ./app:/app
+    ports:
+      - 8083:8080
