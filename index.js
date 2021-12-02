@@ -56,7 +56,7 @@ const typeDefs = gql`
   type Query {
     User(id: String): User
     Users: [User]
-    Shows: [Show]
+    Shows(start: String!, end: String!): [Show]
     Events: [Event]
     Stream: Stream
     Mixes: Mixes

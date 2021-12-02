@@ -16,8 +16,18 @@ module.exports = {
     Users: async (_, {}, {dataSources, authenticated, user, headers}) => {
       if (authenticated && user.role == 'admin') return models.User.users();
     },
-    Shows: (_, {}) => {
-      return models.Show.fetch();
+    Shows: (_, {start, end}) => {
+      console.log(start, end);
+      if (
+        new Date(start) === 'Invalid Date' ||
+        isNaN(new Date(start)) ||
+        new Date(end) === 'Invalid Date' ||
+        isNaN(new Date(end)) ||
+        new Date(start).getDate() > new Date(end).getDate()
+      ) {
+        throw new Error('Please enter valid dates');
+      }
+      return models.Show.fetch(start, end);
     },
     Events: (_, {}) => {
       return models.Event.fetch();
@@ -45,17 +55,18 @@ module.exports = {
         });
     },
     Mixes: async (_, {}) => {
-      return await axios.get(
-        `https:
-      ).then(res => {
-        return {
-          next: res.data.paging.next,
-          mixes: res.data.data
-        }
-        return res.data;
-      }).catch(() => {
-        return null;
-      });
+      return await axios
+        .get(`https:
+        .then(res => {
+          return {
+            next: res.data.paging.next,
+            mixes: res.data.data,
+          };
+          return res.data;
+        })
+        .catch(() => {
+          return null;
+        });
     },
   },
   Mutation: {

@@ -37,8 +37,11 @@ const User = {
   },
 };
 const Show = {
-  async fetch() {
-    const res = await pool.query('select * from Shows');
+  async fetch(start, end) {
+    const res = await pool.query(
+      'select * from Shows where starts_at::date >= $1 AND ends_at::date <= $2',
+      [start, end],
+    );
     return res.rows;
   },
   async post(name, starts_at, ends_at, genres, redundancy, color, uid) {
