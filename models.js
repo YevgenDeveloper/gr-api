@@ -37,7 +37,7 @@ const User = {
   },
 };
 const Show = {
-  async fetch(start, end) {
+  async fetch({start, end}) {
     const res = await pool.query(
       'select * from Shows where starts_at::date >= $1 AND ends_at::date <= $2',
       [start, end],

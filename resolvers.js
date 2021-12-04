@@ -17,17 +17,18 @@ module.exports = {
       if (authenticated && user.role == 'admin') return models.User.users();
     },
     Shows: (_, {start, end}) => {
-      console.log(start, end);
+      const s = new Date(start),
+        e = new Date(end);
       if (
-        new Date(start) === 'Invalid Date' ||
-        isNaN(new Date(start)) ||
-        new Date(end) === 'Invalid Date' ||
-        isNaN(new Date(end)) ||
-        new Date(start).getDate() > new Date(end).getDate()
+        s === 'Invalid Date' ||
+        isNaN(s) ||
+        e === 'Invalid Date' ||
+        isNaN(e) ||
+        s > e
       ) {
         throw new Error('Please enter valid dates');
       }
-      return models.Show.fetch(start, end);
+      return models.Show.fetch({start, end});
     },
     Events: (_, {}) => {
       return models.Event.fetch();
