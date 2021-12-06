@@ -32,6 +32,7 @@ CREATE TABLE Events(
 CREATE TABLE Shows(
   id UUID PRIMARY KEY,
   name TEXT,
+  dj TEXT,
   starts_at TIMESTAMP,
   ends_at TIMESTAMP,
   redundancy INTEGER check(redundancy >= 0 AND redundancy <= 4),

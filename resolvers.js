@@ -97,19 +97,20 @@ module.exports = {
     },
     add_show: async (
       _,
-      {name, starts_at, ends_at, redundancy, genres, color},
+      {name, dj, starts_at, ends_at, redundancy, genres, color},
       {dataSources, authenticated, user, headers},
     ) => {
       if (authenticated) {
-        const id = models.Show.post(
+        const id = models.Show.post({
           name,
+          dj,
           starts_at,
           ends_at,
           genres,
           redundancy,
           color,
-          user.id,
-        );
+          uid: user.id,
+        });
         return id;
       }
       return null;

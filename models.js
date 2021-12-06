@@ -44,10 +44,10 @@ const Show = {
     );
     return res.rows;
   },
-  async post(name, starts_at, ends_at, genres, redundancy, color, uid) {
+  async post({name, dj, starts_at, ends_at, genres, redundancy, color, uid}) {
     const res = await pool.query(
-      'INSERT INTO Shows VALUES(uuid_generate_v4(), $1, $2, $3, $4, $5, $6) RETURNING id',
-      [name, starts_at, ends_at, redundancy, color, uid],
+      'INSERT INTO Shows VALUES(uuid_generate_v4(), $1, $2, $3, $4, $5, $6, $7) RETURNING id',
+      [name, dj, starts_at, ends_at, redundancy, color, uid],
     );
     const id = res.rows[0].id;
     await Promise.all(

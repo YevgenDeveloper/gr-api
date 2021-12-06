@@ -19,6 +19,7 @@ const typeDefs = gql`
     starts_at: String
     ends_at: String
     redundancy: Int
+    dj: String
     genres: [String]
     added_by: User
   }
@@ -72,6 +73,7 @@ const typeDefs = gql`
     ): String
     add_show(
       name: String!
+      dj: String
       starts_at: String!
       ends_at: String!
       redundancy: Int!
