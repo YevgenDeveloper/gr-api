@@ -38,9 +38,22 @@ const User = {
 };
 const Show = {
   async fetch({start, end}) {
+    let genres;
     const res = await pool.query(
       'select * from Shows where starts_at::date >= $1 AND ends_at::date <= $2',
       [start, end],
+    );
+    await Promise.all(
+      res.rows.map(async (row, i) => {
+        genres = await pool.query(
+          'select genre from shows_genres where id = $1',
+          [row.id],
+        );
+        res.rows[i].genres = [];
+        genres.rows.map(col => {
+          res.rows[i].genres.push(col.genre);
+        });
+      }),
     );
     return res.rows;
   },
