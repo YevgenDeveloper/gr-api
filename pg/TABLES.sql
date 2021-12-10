@@ -36,7 +36,6 @@ CREATE TABLE Shows(
   starts_at TIMESTAMP,
   ends_at TIMESTAMP,
   redundancy INTEGER check(redundancy >= 0 AND redundancy <= 4),
-  color VARCHAR(7),
   added_by UUID references Users(id)
 );
 CREATE TABLE shows_genres(

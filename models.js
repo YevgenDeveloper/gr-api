@@ -40,9 +40,10 @@ const Show = {
   async fetch({start, end}) {
     let genres;
     const res = await pool.query(
-      'select * from Shows where starts_at::date >= $1 AND ends_at::date <= $2',
-      [start, end],
+      'select * from Shows where starts_at::date >= $1 AND mod((extract(epoch from $1) - extract(epoch from starts_at::date))::bigint, (redundancy * 604800)::bigint) = 0',
+      [start],
     );
+    console.log(new Date(start).getTime());
     await Promise.all(
       res.rows.map(async (row, i) => {
         genres = await pool.query(
@@ -57,10 +58,10 @@ const Show = {
     );
     return res.rows;
   },
-  async post({name, dj, starts_at, ends_at, genres, redundancy, color, uid}) {
+  async post({name, dj, starts_at, ends_at, genres, redundancy, uid}) {
     const res = await pool.query(
-      'INSERT INTO Shows VALUES(uuid_generate_v4(), $1, $2, $3, $4, $5, $6, $7) RETURNING id',
-      [name, dj, starts_at, ends_at, redundancy, color, uid],
+      'INSERT INTO Shows VALUES(uuid_generate_v4(), $1, $2, $3, $4, $5, $6) RETURNING id',
+      [name, dj, starts_at, ends_at, redundancy, uid],
     );
     const id = res.rows[0].id;
     await Promise.all(

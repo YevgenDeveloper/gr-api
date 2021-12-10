@@ -3,6 +3,8 @@ services:
   db:
     build: ./pg
     restart: always
+    volumes:
+      - .:/app
     environment:
       POSTGRES_DB: odclive
       POSTGRES_PASSWORD: develop

@@ -31,3 +31,21 @@ $$
   SELECT * FROM Users WHERE username = usernam AND
     password = crypt(passwd, password);
 $$ LANGUAGE sql;
+CREATE OR REPLACE FUNCTION getshows(starts DATE)
+RETURNS SETOF Shows AS
+$$
+DECLARE res Shows;
+BEGIN
+  FOR i in 0..6 LOOP
+    FOR res IN
+      SELECT * FROM Shows WHERE starts_at::date <= starts + i AND MOD(
+        (extract(epoch from starts + i) -
+          extract(epoch from starts_at::date))::bigint,
+        (redundancy * 604800)::bigint) = 0
+      LOOP
+      RETURN NEXT res;
+    END LOOP;
+  END LOOP;
+  RETURN;
+END;
+$$ LANGUAGE plpgsql;

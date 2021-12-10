@@ -78,7 +78,15 @@ const typeDefs = gql`
       ends_at: String!
       redundancy: Int!
       genres: [String]
-      color: String!
+    ): String
+    modify_show(
+      id: String!
+      name: String!
+      dj: String
+      starts_at: String!
+      ends_at: String!
+      redundancy: Int!
+      genres: [String]
     ): String
     add_event(
       name: String!
