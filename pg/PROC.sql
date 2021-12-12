@@ -32,18 +32,28 @@ $$
     password = crypt(passwd, password);
 $$ LANGUAGE sql;
 CREATE OR REPLACE FUNCTION getshows(starts DATE)
-RETURNS SETOF Shows AS
-$$
-DECLARE res Shows;
+RETURNS TABLE(
+  id TEXT, name TEXT, dj TEXT, starts_at TIMESTAMP,
+  ends_at TIMESTAMP, redundancy INTEGER, added_by TEXT
+) AS $$
+DECLARE res record;
 BEGIN
   FOR i in 0..6 LOOP
     FOR res IN
-      SELECT * FROM Shows WHERE starts_at::date <= starts + i AND MOD(
+      SELECT a.* FROM Shows a WHERE a.starts_at::date <= starts + i AND MOD(
         (extract(epoch from starts + i) -
-          extract(epoch from starts_at::date))::bigint,
-        (redundancy * 604800)::bigint) = 0
+          extract(epoch from a.starts_at::date))::bigint,
+        (a.redundancy * 604800)::bigint) = 0
       LOOP
-      RETURN NEXT res;
+        id := res.id;
+        name := res.name;
+        dj := res.dj;
+        starts_at := (starts + i)::date + res.starts_at::time;
+        ends_at := (starts + i + (res.ends_at::date - res.starts_at::date))::date
+          + res.ends_at::time;
+        redundancy := res.redundancy;
+        added_by := res.added_by;
+      RETURN NEXT;
     END LOOP;
   END LOOP;
   RETURN;
