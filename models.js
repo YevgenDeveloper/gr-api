@@ -39,11 +39,7 @@ const User = {
 const Show = {
   async fetch({start, end}) {
     let genres;
-    const res = await pool.query(
-      'select * from Shows where starts_at::date >= $1 AND mod((extract(epoch from $1) - extract(epoch from starts_at::date))::bigint, (redundancy * 604800)::bigint) = 0',
-      [start],
-    );
-    console.log(new Date(start).getTime());
+    const res = await pool.query('select * from getshows($1);', [start]);
     await Promise.all(
       res.rows.map(async (row, i) => {
         genres = await pool.query(
