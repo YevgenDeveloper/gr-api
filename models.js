@@ -67,6 +67,13 @@ const Show = {
     );
     return id;
   },
+  async modify({id, name, dj, starts_at, ends_at, genres, redundancy, uid}) {
+    await pool.query(
+      'UPDATE Shows SET name = $2, dj = $3, starts_at = $4, ends_at = $5, redundancy = $6, added_by = $7 WHERE id = $1;',
+      [id, name, dj, starts_at, ends_at, redundancy, uid],
+    );
+    return `Event '${name}' Modified`;
+  },
 };
 const Event = {
   async fetch() {

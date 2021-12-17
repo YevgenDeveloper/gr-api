@@ -101,7 +101,7 @@ module.exports = {
       {dataSources, authenticated, user, headers},
     ) => {
       if (authenticated) {
-        const id = models.Show.post({
+        return models.Show.post({
           name,
           dj,
           starts_at,
@@ -110,7 +110,25 @@ module.exports = {
           redundancy,
           uid: user.id,
         });
-        return id;
+      }
+      return null;
+    },
+    modify_show: async (
+      _,
+      {id, name, dj, starts_at, ends_at, redundancy, genres},
+      {dataSources, authenticated, user, headers},
+    ) => {
+      if (authenticated) {
+        return models.Show.modify({
+          id,
+          name,
+          dj,
+          starts_at,
+          ends_at,
+          genres,
+          redundancy,
+          uid: user.id,
+        });
       }
       return null;
     },
