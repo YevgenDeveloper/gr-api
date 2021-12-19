@@ -45,9 +45,9 @@ const typeDefs = gql`
   }
   type Mix {
     tags: [Tag]
-    play_count: Int,
-    key: String,
-    slug: String,
+    play_count: Int
+    key: String
+    slug: String
     pictures: Pic_Mix
   }
   type Mixes {
@@ -57,7 +57,7 @@ const typeDefs = gql`
   type Query {
     User(id: String): User
     Users: [User]
-    Shows(start: String!, end: String!): [Show]
+    Shows(start: String!): [Show]
     Events: [Event]
     Stream: Stream
     Mixes: Mixes
@@ -79,6 +79,7 @@ const typeDefs = gql`
       redundancy: Int!
       genres: [String]
     ): String
+    del_show(id: String!): String
     modify_show(
       id: String!
       name: String!

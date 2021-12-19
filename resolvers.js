@@ -17,18 +17,11 @@ module.exports = {
       if (authenticated && user.role == 'admin') return models.User.users();
     },
     Shows: (_, {start, end}) => {
-      const s = new Date(start),
-        e = new Date(end);
-      if (
-        s === 'Invalid Date' ||
-        isNaN(s) ||
-        e === 'Invalid Date' ||
-        isNaN(e) ||
-        s > e
-      ) {
+      const s = new Date(start);
+      if (s === 'Invalid Date' || isNaN(s)) {
         throw new Error('Please enter valid dates');
       }
-      return models.Show.fetch({start, end});
+      return models.Show.fetch({start});
     },
     Events: (_, {}) => {
       return models.Event.fetch();
@@ -113,10 +106,16 @@ module.exports = {
       }
       return null;
     },
+    del_show: async (_, {id}, {authenticated}) => {
+      if (authenticated) {
+        return models.Show.delete({id});
+      }
+      return null;
+    },
     modify_show: async (
       _,
       {id, name, dj, starts_at, ends_at, redundancy, genres},
-      {dataSources, authenticated, user, headers},
+      {authenticated, user},
     ) => {
       if (authenticated) {
         return models.Show.modify({

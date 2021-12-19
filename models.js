@@ -37,7 +37,7 @@ const User = {
   },
 };
 const Show = {
-  async fetch({start, end}) {
+  async fetch({start}) {
     let genres;
     const res = await pool.query('select * from getshows($1);', [start]);
     await Promise.all(
@@ -66,6 +66,11 @@ const Show = {
       }),
     );
     return id;
+  },
+  async delete({id}) {
+    await pool.query('DELETE FROM shows_genres where id = $1', [id]);
+    await pool.query('DELETE FROM Shows where id = $1', [id]);
+    return 'Event deleted';
   },
   async modify({id, name, dj, starts_at, ends_at, genres, redundancy, uid}) {
     await pool.query(
