@@ -44,6 +44,6 @@ services:
   app:
     build: ./vuedev
     volumes:
-      - ./app:/app
+      - ./cli:/app
     ports:
       - 8083:8080

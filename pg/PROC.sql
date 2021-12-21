@@ -43,7 +43,7 @@ BEGIN
       SELECT a.* FROM Shows a WHERE a.starts_at::date <= starts + i AND MOD(
         (extract(epoch from starts + i) -
           extract(epoch from a.starts_at::date))::bigint,
-        (a.redundancy * 604800)::bigint) = 0
+        (a.redundancy * 604800)::bigint) = 0 ORDER BY starts_at
       LOOP
         id := res.id;
         name := res.name;
