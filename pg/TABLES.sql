@@ -39,7 +39,7 @@ CREATE TABLE Shows(
   added_by UUID references Users(id)
 );
 CREATE TABLE shows_genres(
-  id UUID references Shows(id),
+  id UUID, -- references shows and events
   genre TEXT references Genres(name),
   PRIMARY KEY(id, genre)
 );

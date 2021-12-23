@@ -131,5 +131,22 @@ module.exports = {
       }
       return null;
     },
+    add_event: async (
+      _,
+      {name, description, starts_at, ends_at, genres, facebook},
+      {authenticated, user},
+    ) => {
+      if (authenticated)
+        return models.Event.post({
+          name,
+          description,
+          starts_at,
+          ends_at,
+          genres,
+          facebook,
+          uid: user.id,
+        });
+      return null;
+    },
   },
 };
