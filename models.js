@@ -87,6 +87,12 @@ const Event = {
     );
     return res.rows;
   },
+  async fetchall() {
+    const res = await pool.query(
+      'select * from Events;',
+    );
+    return res.rows;
+  },
   async post({name, description, starts_at, ends_at, genres, facebook, uid}) {
     const res = await pool.query(
       'INSERT INTO Events VALUES(uuid_generate_v4(), $1, $2, $3, $4, $5, $6) RETURNING id',
@@ -99,6 +105,11 @@ const Event = {
       }),
     );
     return id;
+  },
+  async delete({id}) {
+    await pool.query('DELETE FROM shows_genres where id = $1', [id]);
+    await pool.query('DELETE FROM Events where id = $1', [id]);
+    return 'Event deleted';
   },
 };
 module.exports = {
