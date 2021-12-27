@@ -1,8 +1,15 @@
-const {ApolloServer, gql} = require('apollo-server');
-const jwt = require('jsonwebtoken');
+const express = require('express');
+const {ApolloServer, gql} = require('apollo-server-express');
+const jwtcheck = require('./jwtcheck');
 const resolvers = require('./resolvers');
 const models = require('./models');
+const fileUpload = require('./fileUpload');
 const typeDefs = gql`
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
   type User {
     id: String
     username: String
@@ -31,6 +38,7 @@ const typeDefs = gql`
     ends_at: String
     genres: [String]
     facebook: String
+    image: String
     added_by: User
   }
   type Tag {
@@ -103,28 +111,24 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({req}) => {
-    const header = req.headers.authorization || '';
-    if (header) {
-      const s = header.split(' ');
-      if (s.length == 2 && s[0] == 'Bearer') {
-        const token = s[1];
-        if (!jwt.verify(token, process.env.JWT_SECRET))
-          throw new Error('Invalid token');
-        const content = jwt.decode(token);
-        let user;
-        await models.User.fetch(content.uid).then(res => {
-          user = res;
-        });
-        return {
-          authenticated: true,
-          user,
-          headers: req.headers,
-        };
-      }
-    }
-    return {authenticated: false, headers: req.headers};
+    return jwtcheck({req});
   },
 });
-server.listen().then(({url}) => {
-  console.log(`🚀  Server ready at ${url}`);
+const app = express();
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+  );
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, DELETE, GET');
+    return res.status(200).json({});
+  }
+  next();
 });
+app.use('/upload', fileUpload);
+server.applyMiddleware({app});
+app.listen({port: 4000}, () =>
+  console.log(`Server ready at http:
+);
