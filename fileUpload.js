@@ -4,7 +4,7 @@ const multer = require('multer');
 const jwtcheck = require('./jwtcheck');
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, './');
+    cb(null, './uploads');
   },
   filename: function(req, file, cb) {
     cb(null, req.body.id);
@@ -24,4 +24,5 @@ router.post(
     res.status(201).json({data: req.body.id});
   },
 );
+router.get('/:id', express.static('./uploads'));
 module.exports = router;
