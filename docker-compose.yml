@@ -19,6 +19,7 @@ services:
       JWT_SECRET: develop
       YT_CHANNEL: YOURCHANNELID
       GOOGLE_KEY: YOURGOOGLEAPIKEY
+      API_WEBSITE: http://localhost:8081
     volumes:
       - .:/app
     ports:

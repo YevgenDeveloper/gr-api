@@ -26,6 +26,9 @@ module.exports = {
     Events: (_, {}) => {
       return models.Event.fetch();
     },
+    Event: (_, {id}) => {
+      return models.Event.getone({id});
+    },
     Stream: async (_, {}) => {
       return await axios
         .get(

@@ -1,4 +1,5 @@
 const pool = require('./pool');
+const api = process.env.API_WEBSITE;
 const User = {
   fetch(uid) {
     return new Promise(async (resolve, reject) => {
@@ -81,6 +82,19 @@ const Show = {
   },
 };
 const Event = {
+  async getone({id}) {
+    const res = await pool.query('select * from Events where id = $1', [id]);
+    if (res.rows.length == 0) return null;
+    let genres = await pool.query(
+      'select genre from shows_genres where id = $1',
+      [id],
+    );
+    res.rows[0].genres = [];
+    genres.rows.map(col => {
+      res.rows[0].genres.push(col.genre);
+    });
+    return res.rows[0];
+  },
   async fetch() {
     let genres;
     const res = await pool.query(
@@ -88,7 +102,7 @@ const Event = {
     );
     await Promise.all(
       res.rows.map(async (row, i) => {
-        row.image = `/upload/${row.id}`;
+        row.image = `${api}/upload/${row.id}`;
         genres = await pool.query(
           'select genre from shows_genres where id = $1',
           [row.id],
@@ -103,6 +117,19 @@ const Event = {
   },
   async fetchall() {
     const res = await pool.query('select * from Events;');
+    await Promise.all(
+      res.rows.map(async (row, i) => {
+        row.image = `${api}/upload/${row.id}`;
+        genres = await pool.query(
+          'select genre from shows_genres where id = $1',
+          [row.id],
+        );
+        res.rows[i].genres = [];
+        genres.rows.map(col => {
+          res.rows[i].genres.push(col.genre);
+        });
+      }),
+    );
     return res.rows;
   },
   async post({name, description, starts_at, ends_at, genres, facebook, uid}) {
