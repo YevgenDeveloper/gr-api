@@ -89,6 +89,9 @@ const Event = {
       'select genre from shows_genres where id = $1',
       [id],
     );
+    res.rows[0].image = `${api}/upload/${res.rows[0].id}.${
+      res.rows[0].imgformat
+    }`;
     res.rows[0].genres = [];
     genres.rows.map(col => {
       res.rows[0].genres.push(col.genre);
@@ -102,7 +105,7 @@ const Event = {
     );
     await Promise.all(
       res.rows.map(async (row, i) => {
-        row.image = `${api}/upload/${row.id}`;
+        row.image = `${api}/upload/${row.id}.${row.imgformat}`;
         genres = await pool.query(
           'select genre from shows_genres where id = $1',
           [row.id],
@@ -119,7 +122,7 @@ const Event = {
     const res = await pool.query('select * from Events;');
     await Promise.all(
       res.rows.map(async (row, i) => {
-        row.image = `${api}/upload/${row.id}`;
+        row.image = `${api}/upload/${row.id}.${row.imgformat}`;
         genres = await pool.query(
           'select genre from shows_genres where id = $1',
           [row.id],
@@ -134,8 +137,8 @@ const Event = {
   },
   async post({name, description, starts_at, ends_at, genres, facebook, uid}) {
     const res = await pool.query(
-      'INSERT INTO Events VALUES(uuid_generate_v4(), $1, $2, $3, $4, $5, $6) RETURNING id',
-      [name, description, starts_at, ends_at, facebook, uid],
+      'INSERT INTO Events VALUES(uuid_generate_v4(), $1, $2, $3, $4, $5, $6, $7) RETURNING id',
+      [name, description, starts_at, ends_at, facebook, '', uid],
     );
     const id = res.rows[0].id;
     await Promise.all(

@@ -27,6 +27,7 @@ CREATE TABLE Events(
   starts_at TIMESTAMP,
   ends_at TIMESTAMP,
   facebook TEXT,
+  imgformat VARCHAR(4),
   added_by UUID references Users(id)
 );
 CREATE TABLE Shows(
