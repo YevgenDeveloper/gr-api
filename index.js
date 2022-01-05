@@ -1,11 +1,9 @@
 const express = require('express');
 const {ApolloServer, gql} = require('apollo-server-express');
-const jwt = require('jsonwebtoken');
 const jwtcheck = require('./jwtcheck');
 const resolvers = require('./resolvers');
 const models = require('./models');
 const fileUpload = require('./fileUpload');
-const secret = process.env.JWT_SECRET;
 const typeDefs = gql`
   type File {
     filename: String!
@@ -118,27 +116,15 @@ const server = new ApolloServer({
   },
 });
 const app = express();
-app.use(async (req, res, next) => {
+app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   );
-  console.log(await jwtcheck({req}));
   if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', 'PUT, POST, DELETE, GET');
     return res.status(200).json({});
-  }
-  const test_token = await jwtcheck({req});
-  if (test_token.authenticated) {
-    const token = jwt.sign(
-      {uid: test_token.user.id, role: test_token.user.role},
-      secret,
-      {
-        expiresIn: '2h',
-      },
-    );
-    res.header('Refresh', token);
   }
   next();
 });
