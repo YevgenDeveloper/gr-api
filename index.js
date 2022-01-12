@@ -66,6 +66,7 @@ const typeDefs = gql`
     User(id: String): User
     Users: [User]
     Shows(start: String!): [Show]
+    today_shows(start: String!): [Show]
     Events: [Event]
     Event(id: String): Event
     Stream: Stream

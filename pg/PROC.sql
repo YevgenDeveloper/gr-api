@@ -31,14 +31,14 @@ $$
   SELECT * FROM Users WHERE username = usernam AND
     password = crypt(passwd, password);
 $$ LANGUAGE sql;
-CREATE OR REPLACE FUNCTION getshows(starts DATE)
+CREATE OR REPLACE FUNCTION getshows(starts DATE, nbr INTEGER)
 RETURNS TABLE(
   id TEXT, name TEXT, dj TEXT, starts_at TIMESTAMP,
   ends_at TIMESTAMP, redundancy INTEGER, added_by TEXT
 ) AS $$
 DECLARE res record;
 BEGIN
-  FOR i in 0..6 LOOP
+  FOR i in 0..nbr LOOP
     FOR res IN
       SELECT a.* FROM Shows a WHERE a.starts_at::date <= starts + i AND
       a.redundancy <> 0 AND MOD(

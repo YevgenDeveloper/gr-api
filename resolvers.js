@@ -16,7 +16,14 @@ module.exports = {
     Users: async (_, {}, {dataSources, authenticated, user, headers}) => {
       if (authenticated && user.role == 'admin') return models.User.users();
     },
-    Shows: (_, {start, end}) => {
+    today_shows: (_, {start}) => {
+      const s = new Date(start);
+      if (s === 'Invalid Date' || isNaN(s)) {
+        throw new Error('Please enter valid dates');
+      }
+      return models.Show.getday({start});
+    },
+    Shows: (_, {start}) => {
       const s = new Date(start);
       if (s === 'Invalid Date' || isNaN(s)) {
         throw new Error('Please enter valid dates');

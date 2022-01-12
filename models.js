@@ -38,9 +38,26 @@ const User = {
   },
 };
 const Show = {
+  async getday({start}) {
+    let genres;
+    const res = await pool.query('select * from getshows($1, 0);', [start]);
+    await Promise.all(
+      res.rows.map(async (row, i) => {
+        genres = await pool.query(
+          'select genre from shows_genres where id = $1',
+          [row.id],
+        );
+        res.rows[i].genres = [];
+        genres.rows.map(col => {
+          res.rows[i].genres.push(col.genre);
+        });
+      }),
+    );
+    return res.rows;
+  },
   async fetch({start}) {
     let genres;
-    const res = await pool.query('select * from getshows($1);', [start]);
+    const res = await pool.query('select * from getshows($1, 6);', [start]);
     await Promise.all(
       res.rows.map(async (row, i) => {
         genres = await pool.query(
@@ -101,7 +118,7 @@ const Event = {
   async fetch() {
     let genres;
     const res = await pool.query(
-      'select * from Events where starts_at::date > now()::date',
+      'select * from Events where ends_at::date > now()::date',
     );
     await Promise.all(
       res.rows.map(async (row, i) => {
