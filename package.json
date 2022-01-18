@@ -10,10 +10,7 @@
     "type": "git",
     "url": "git+ssh://git@gitlab.com/odclive/graph_api.git"
   },
-  "keywords": [
-    "graphql",
-    "nodejs"
-  ],
+  "keywords": ["graphql", "nodejs"],
   "author": "kessibi",
   "license": "MIT",
   "bugs": {
@@ -30,8 +27,7 @@
     "graphql-upload": "^8.0.2",
     "jsonwebtoken": "^8.4.0",
     "multer": "^1.4.1",
-    "pg": "^7.7.1",
-    "request": "^2.88.0"
+    "pg": "^7.7.1"
   },
   "devDependencies": {
     "prettier": "^1.15.3"
