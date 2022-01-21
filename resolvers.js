@@ -158,5 +158,27 @@ module.exports = {
         });
       return null;
     },
+    modify_event: async (
+      _,
+      {id, name, description, starts_at, ends_at, genres, facebook},
+      {authenticated, user},
+    ) => {
+      if (authenticated)
+        return models.Event.put({
+          id,
+          name,
+          description,
+          starts_at,
+          ends_at,
+          genres,
+          facebook,
+          uid: user.id,
+        });
+      return null;
+    },
+    delete_event: async (_, {id}, {authenticated, user}) => {
+      if (authenticated) return models.Event.delete({id});
+      return null;
+    },
   },
 };

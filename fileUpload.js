@@ -30,5 +30,18 @@ router.post(
     res.status(201).json({data: req.body.id});
   },
 );
+router.put(
+  '/',
+  async (req, res, next) => {
+    const jwt = await jwtcheck({req});
+    if (jwt.authenticated && jwt.user.role == 'admin') {
+      next();
+    } else res.status(400).json({error: 'you have no rights to upload'});
+  },
+  upload.single('image'),
+  (req, res) => {
+    res.status(201).json({data: req.body.id});
+  },
+);
 router.get('/:id', express.static('./uploads'));
 module.exports = router;

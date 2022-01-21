@@ -95,7 +95,13 @@ const Show = {
       'UPDATE Shows SET name = $2, dj = $3, starts_at = $4, ends_at = $5, redundancy = $6, added_by = $7 WHERE id = $1;',
       [id, name, dj, starts_at, ends_at, redundancy, uid],
     );
-    return `Event '${name}' Modified`;
+    await pool.query('DELETE FROM shows_genres where id = $1', [id]);
+    await Promise.all(
+      genres.map(async g => {
+        await pool.query('select add_genre_show($1, $2)', [id, g]);
+      }),
+    );
+    return `Show '${name}' Modified`;
   },
 };
 const Event = {
@@ -164,6 +170,28 @@ const Event = {
       }),
     );
     return id;
+  },
+  async put({
+    id,
+    name,
+    description,
+    starts_at,
+    ends_at,
+    genres,
+    facebook,
+    uid,
+  }) {
+    await pool.query(
+      'UPDATE Events SET name = $2, description = $3, starts_at = $4, ends_at = $5, facebook = $6, added_by = $7 WHERE id = $1;',
+      [id, name, description, starts_at, ends_at, facebook, uid],
+    );
+    await pool.query('DELETE FROM shows_genres where id = $1', [id]);
+    await Promise.all(
+      genres.map(async g => {
+        await pool.query('select add_genre_show($1, $2)', [id, g]);
+      }),
+    );
+    return `Event '${name}' Modified`;
   },
   async delete({id}) {
     await pool.query('DELETE FROM shows_genres where id = $1', [id]);

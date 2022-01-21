@@ -108,6 +108,16 @@ const typeDefs = gql`
       genres: [String]
       facebook: String
     ): String
+    modify_event(
+      id: String!
+      name: String!
+      description: String
+      starts_at: String!
+      ends_at: String!
+      genres: [String]
+      facebook: String
+    ): String
+    delete_event(id: String!): String
   }
 `;
 const server = new ApolloServer({
