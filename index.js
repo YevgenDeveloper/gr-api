@@ -123,6 +123,7 @@ const typeDefs = gql`
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  playground: false,
   context: async ({req}) => {
     return jwtcheck({req});
   },

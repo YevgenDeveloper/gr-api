@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: odclive
       POSTGRES_PASSWORD: develop
   api:
-    build: ./pm2
+    build: .
     environment:
       DB_HOST: db
       DB_NAME: odclive
@@ -21,7 +21,7 @@ services:
       GOOGLE_KEY: YOURGOOGLEAPIKEY
       API_WEBSITE: http://localhost:8081
     volumes:
-      - .:/app
+      - /opt/odclive/uploads:/usr/src/app/uploads
     ports:
       - 8081:4000
   chat:
@@ -35,11 +35,9 @@ services:
     ports:
       - 8080:8080
   admin:
-    build: ./vuedev
-    volumes:
-      - ./admin:/app
+    build: ./admin
     ports:
-      - 8082:8080
+      - 8082:5000
   cli:
     build: ./cli
     ports:
