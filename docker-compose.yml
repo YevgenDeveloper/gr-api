@@ -39,14 +39,10 @@ services:
     ports:
       - 8082:5000
   cli:
-    build: ./vuedev
-    volumes:
-      - ./cli:/app
+    build: ./cli
     ports:
-      - 8083:8080
+      - 8083:5000
   app:
-    build: ./vuedev
-    volumes:
-      - ./app:/app
+    build: ./app
     ports:
-      - 8084:8080
+      - 8084:5000
