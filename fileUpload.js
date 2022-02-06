@@ -43,5 +43,8 @@ router.put(
     res.status(201).json({data: req.body.id});
   },
 );
-router.get('/:id', express.static('./uploads'));
+router.get('/:id', (req, res, next) => {
+  res.header('Cache-Control', `public, max-age=${3600 * 24 * 2}`);
+  next();
+}, express.static('./uploads'));
 module.exports = router;

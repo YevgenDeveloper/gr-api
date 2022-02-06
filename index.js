@@ -138,6 +138,8 @@ app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', 'PUT, POST, DELETE, GET');
     return res.status(200).json({});
+  } else {
+    res.header('Cache-Control', `public, max-age=${3600 * 24}`);
   }
   next();
 });
