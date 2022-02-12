@@ -1,0 +1,54 @@
+version: '3.1'
+services:
+  db:
+    build: ./pg
+    restart: always
+    volumes:
+      - .:/app
+    environment:
+      POSTGRES_DB: odclive
+      POSTGRES_PASSWORD: develop
+  api:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_NAME: odclive
+      DB_USER: postgres
+      DB_PASSWORD: develop
+      DB_PORT: 5432
+      JWT_SECRET: develop
+      YT_CHANNEL: YOURCHANNELID
+      GOOGLE_KEY: YOURGOOGLEAPIKEY
+      API_WEBSITE: http://localhost:8081
+    volumes:
+      - /opt/odclive/uploads:/usr/src/app/uploads
+    ports:
+      - 8081:4000
+  chat:
+    build: ./chat
+    environment:
+      DB_HOST: db
+      DB_NAME: odclive
+      DB_USER: postgres
+      DB_PASSWORD: develop
+      DB_PORT: 5432
+    ports:
+      - 8080:8080
+  admin:
+    build: ./vuedev
+    volumes:
+      - ./admin:/app
+    ports:
+      - 8082:8080
+  cli:
+    build: ./vuedev
+    volumes:
+      - ./cli:/app
+    ports:
+      - 8083:8080
+  app:
+    build: ./vuedev
+    volumes:
+      - ./app:/app
+    ports:
+      - 8084:8080

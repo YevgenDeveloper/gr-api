@@ -40,7 +40,10 @@ const User = {
 const Show = {
   async getday({start}) {
     let genres;
-    const res = await pool.query('select * from getshows($1, 0);', [start]);
+    const res = await pool.query(
+      'select * from getshows($1, 0) order by starts_at;',
+      [start],
+    );
     await Promise.all(
       res.rows.map(async (row, i) => {
         genres = await pool.query(
