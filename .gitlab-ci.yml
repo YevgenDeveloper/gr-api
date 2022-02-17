@@ -1,0 +1,9 @@
+image: node:10.9.0-alpine
+stages:
+  - build
+build:
+  stage: build
+  script:
+    - cd /builds/odclive/cli
+    - npm install
+    - npm run build
