@@ -118,12 +118,14 @@ const typeDefs = gql`
       facebook: String
     ): String
     delete_event(id: String!): String
+    print_events(state: Boolean!): Boolean
+    print_shows(state: Boolean!): Boolean
   }
 `;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  playground: false,
+  playground: true,
   context: async ({req}) => {
     return jwtcheck({req});
   },

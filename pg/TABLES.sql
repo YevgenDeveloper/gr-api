@@ -44,6 +44,12 @@ CREATE TABLE shows_genres(
   genre TEXT references Genres(name),
   PRIMARY KEY(id, genre)
 );
+CREATE TABLE Prints(
+  id TEXT PRIMARY KEY,
+  status BOOLEAN
+);
 INSERT INTO Roles(name, permissions) VALUES ('admin', 100);
 INSERT INTO Roles(name, permissions) VALUES ('mod', 75);
 INSERT INTO Roles(name, permissions) VALUES ('dj', 50);
+INSERT INTO Prints(id, status) VALUES ('events', true);
+INSERT INTO Prints(id, status) VALUES ('shows', true);

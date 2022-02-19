@@ -177,7 +177,15 @@ module.exports = {
       return null;
     },
     delete_event: async (_, {id}, {authenticated, user}) => {
-      if (authenticated) return models.Event.delete({id});
+      if (authenticated) return await models.Event.delete({id});
+      return null;
+    },
+    print_events: async(_, {state}, {authenticated, user}) => {
+      if(authenticated) return await models.Event.print(state);
+      return null;
+    },
+    print_shows: async(_, {state}, {authenticated, user}) => {
+      if(authenticated) return await models.Show.print(state);
       return null;
     },
   },

@@ -106,6 +106,12 @@ const Show = {
     );
     return `Show '${name}' Modified`;
   },
+  async print(state) {
+    await pool.query("UPDATE Prints SET status = $1 where id = 'shows';", [
+      state,
+    ]);
+    return state;
+  },
 };
 const Event = {
   async getone({id}) {
@@ -200,6 +206,12 @@ const Event = {
     await pool.query('DELETE FROM shows_genres where id = $1', [id]);
     await pool.query('DELETE FROM Events where id = $1', [id]);
     return 'Event deleted';
+  },
+  async print(state) {
+    await pool.query("UPDATE Prints SET status = $1 where id = 'events';", [
+      state,
+    ]);
+    return state;
   },
 };
 module.exports = {

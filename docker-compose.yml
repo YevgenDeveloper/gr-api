@@ -20,6 +20,7 @@ services:
       YT_CHANNEL: YOURCHANNELID
       GOOGLE_KEY: YOURGOOGLEAPIKEY
       API_WEBSITE: http://localhost:8081
+      NODE_ENV: production
     volumes:
       - /opt/odclive/uploads:/usr/src/app/uploads
     ports:
