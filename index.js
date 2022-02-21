@@ -72,6 +72,8 @@ const typeDefs = gql`
     Event(id: String): Event
     Stream: Stream
     Mixes: Mixes
+    PrintShows: Boolean
+    PrintEvents: Boolean
   }
   type Mutation {
     login(name: String!, password: String!): String

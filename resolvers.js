@@ -72,6 +72,12 @@ module.exports = {
           return null;
         });
     },
+    PrintEvents: async (_, {}) => {
+      return models.Event.getprint();
+    },
+    PrintShows: async (_, {}) => {
+      return models.Show.getprint();
+    },
   },
   Mutation: {
     login: async (_, {name, password}) => {
@@ -180,12 +186,12 @@ module.exports = {
       if (authenticated) return await models.Event.delete({id});
       return null;
     },
-    print_events: async(_, {state}, {authenticated, user}) => {
-      if(authenticated) return await models.Event.print(state);
+    print_events: async (_, {state}, {authenticated, user}) => {
+      if (authenticated) return await models.Event.print(state);
       return null;
     },
-    print_shows: async(_, {state}, {authenticated, user}) => {
-      if(authenticated) return await models.Show.print(state);
+    print_shows: async (_, {state}, {authenticated, user}) => {
+      if (authenticated) return await models.Show.print(state);
       return null;
     },
   },

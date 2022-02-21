@@ -112,6 +112,12 @@ const Show = {
     ]);
     return state;
   },
+  async getprint() {
+    const res = await pool.query(
+      "SELECT status from Prints where id = 'shows';",
+    );
+    return res.rows[0].status;
+  },
 };
 const Event = {
   async getone({id}) {
@@ -212,6 +218,12 @@ const Event = {
       state,
     ]);
     return state;
+  },
+  async getprint() {
+    const res = await pool.query(
+      "SELECT status from Prints where id = 'events';",
+    );
+    return res.rows[0].status;
   },
 };
 module.exports = {
