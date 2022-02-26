@@ -127,7 +127,7 @@ const typeDefs = gql`
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  playground: true,
+  playground: process.env.NODE_ENV != 'production',
   context: async ({req}) => {
     return jwtcheck({req});
   },
