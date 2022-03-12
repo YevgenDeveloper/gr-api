@@ -4,7 +4,7 @@ const jwtcheck = require('./jwtcheck');
 const resolvers = require('./resolvers');
 const models = require('./models');
 const fileUpload = require('./fileUpload');
-const mixcloud = require('./mixcloud');
+const soundcloud = require('./soundcloud');
 const typeDefs = gql`
   type File {
     filename: String!
@@ -148,7 +148,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/upload', fileUpload);
-app.use('/mix', mixcloud);
+app.use('/sounds', soundcloud);
 server.applyMiddleware({app});
 app.listen({port: 4000}, () =>
   console.log(`Server ready at http:
