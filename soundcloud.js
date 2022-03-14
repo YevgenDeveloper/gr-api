@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
+const client = process.env.SND_ID;
 const api = `https:
 router.get('/', async (req, res) => {
   const link = `${api}&limit=20&offset=0&app_locale=fr`;

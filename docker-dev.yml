@@ -20,6 +20,7 @@ services:
       YT_CHANNEL: YOURCHANNELID
       GOOGLE_KEY: YOURGOOGLEAPIKEY
       API_WEBSITE: http://localhost:8081
+      SND_ID: CLIENTID
     volumes:
       - /opt/odclive/uploads:/app/uploads
       - ./:/app
