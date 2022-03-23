@@ -5,7 +5,7 @@ const client = `?client_id=${process.env.SND_ID}`;
 const api = `https:
 const user = `${api}users/713729887/tracks${client}`;
 router.get('/:offset', async (req, res) => {
-  const link = `${user}&limit=20&offset=${req.params.offset}`;
+  const link = `${user}&limit=13&offset=${req.params.offset}`;
   try {
     const sounds = await axios.get(link);
     res.send(sounds.data);
