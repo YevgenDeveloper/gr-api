@@ -4,5 +4,5 @@ COPY package*.json ./
 RUN npm install
 COPY *.js ./
 COPY uploads ./
-COPY layouts ./
+ADD ./layouts ./layouts
 CMD [ "node", "index"]
