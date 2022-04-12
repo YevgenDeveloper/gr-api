@@ -47,9 +47,9 @@ router.post(
       function(code, stdout, stderr) {
         if (code != 0)
           res.status(400).json({error: 'problem converting the picture'});
+        else res.status(201).sendFile('/tmp/output.png');
       },
     );
-    res.status(201).sendFile('/tmp/output.png');
   },
 );
 router.post(
