@@ -31,7 +31,10 @@ router.post(
   '/insta',
   async (req, res, next) => {
     const jwt = await jwtcheck({req});
-    if (jwt.authenticated && jwt.user.role == 'admin') {
+    if (
+      jwt.authenticated &&
+      (jwt.user.role == 'admin' || jwt.user.role == 'mod')
+    ) {
       next();
     } else res.status(400).json({error: 'you have no rights to upload'});
   },
