@@ -1,16 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const multer = require('multer');
-const shell = require('shelljs');
-const jwtcheck = require('./jwtcheck');
-const pool = require('./pool');
+const multer = require("multer");
+const shell = require("shelljs");
+const jwtcheck = require("./jwtcheck");
+const pool = require("./pool");
+let color = "#5D58C9";
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, './uploads');
+    cb(null, "./uploads");
   },
   filename: async function(req, file, cb) {
-    const split = file.originalname.split('.');
-    await pool.query('UPDATE Events SET imgformat = $1 WHERE id = $2;', [
+    const split = file.originalname.split(".");
+    await pool.query("UPDATE Events SET imgformat = $1 WHERE id = $2;", [
       split[split.length - 1],
       req.body.id,
     ]);
@@ -19,26 +20,35 @@ const storage = multer.diskStorage({
 });
 const insta_storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, '/tmp');
+    cb(null, "/tmp");
   },
   filename: function(req, file, cb) {
-    cb(null, 'insta_pic');
+    cb(null, "insta_pic");
   },
 });
-const upload = multer({storage: storage});
-const upload_insta = multer({storage: insta_storage});
+const background_storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "/tmp");
+  },
+  filename: function(req, file, cb) {
+    cb(null, "background");
+  },
+});
+const upload = multer({ storage: storage });
+const upload_insta = multer({ storage: insta_storage });
+const upload_background = multer({ storage: background_storage });
 router.post(
-  '/insta',
+  "/insta",
   async (req, res, next) => {
-    const jwt = await jwtcheck({req});
+    const jwt = await jwtcheck({ req });
     if (
       jwt.authenticated &&
-      (jwt.user.role == 'admin' || jwt.user.role == 'mod')
+      (jwt.user.role == "admin" || jwt.user.role == "mod")
     ) {
       next();
-    } else res.status(400).json({error: 'you have no rights to upload'});
+    } else res.status(400).json({ error: "you have no rights to upload" });
   },
-  upload_insta.single('image'),
+  upload_insta.single("image"),
   (req, res) => {
     const date = req.body.date;
     const month = req.body.month;
@@ -49,44 +59,93 @@ router.post(
       `cd layouts && ./layout.sh /tmp/insta_pic ${date} ${month} "${artist}" "${title}" ${color}`,
       function(code, stdout, stderr) {
         if (code != 0)
-          res.status(400).json({error: 'problem converting the picture'});
-        else res.status(201).sendFile('/tmp/output.png');
-      },
+          res.status(400).json({ error: "problem converting the picture" });
+        else res.status(201).sendFile("/tmp/output.png");
+      }
     );
-  },
+  }
 );
 router.post(
-  '/',
+  "/color/:hex",
   async (req, res, next) => {
-    const jwt = await jwtcheck({req});
-    if (jwt.authenticated && jwt.user.role == 'admin') {
+    const jwt = await jwtcheck({ req });
+    if (
+      jwt.authenticated &&
+      (jwt.user.role == "admin" || jwt.user.role == "mod")
+    ) {
       next();
-    } else res.status(400).json({error: 'you have no rights to upload'});
+    } else res.status(400).json({ error: "you have no rights to upload" });
   },
-  upload.single('image'),
   (req, res) => {
-    res.status(201).json({data: req.body.id});
+    color = `#${req.params.hex}`;
+    res.status(201).json({ success: true });
+  }
+);
+router.get("/color", (req, res) => {
+  res.status(200).json({ color: color });
+});
+router.post(
+  "/background",
+  async (req, res, next) => {
+    const jwt = await jwtcheck({ req });
+    if (
+      jwt.authenticated &&
+      (jwt.user.role == "admin" || jwt.user.role == "mod")
+    ) {
+      next();
+    } else res.status(400).json({ error: "you have no rights to upload" });
   },
+  upload_background.single("image"),
+  (req, res) => {
+    res.status(201).json({ success: true });
+  }
+);
+router.get("/background", (req, res) => {
+  try {
+    res.status(200).sendFile("/tmp/background");
+  } catch {
+    res.status(404).json({ error: "No background has been established" });
+  }
+});
+router.delete("/background", (req, res) => {
+  shell.exec("rm /tmp/background", function(code, stdout, stderr) {
+    if (code != 0)
+      res.status(400).json({ error: "problem deleting the background" });
+    else res.status(200).json({ success: true });
+  });
+});
+router.post(
+  "/",
+  async (req, res, next) => {
+    const jwt = await jwtcheck({ req });
+    if (jwt.authenticated && jwt.user.role == "admin") {
+      next();
+    } else res.status(400).json({ error: "you have no rights to upload" });
+  },
+  upload.single("image"),
+  (req, res) => {
+    res.status(201).json({ data: req.body.id });
+  }
 );
 router.put(
-  '/',
+  "/",
   async (req, res, next) => {
-    const jwt = await jwtcheck({req});
-    if (jwt.authenticated && jwt.user.role == 'admin') {
+    const jwt = await jwtcheck({ req });
+    if (jwt.authenticated && jwt.user.role == "admin") {
       next();
-    } else res.status(400).json({error: 'you have no rights to upload'});
+    } else res.status(400).json({ error: "you have no rights to upload" });
   },
-  upload.single('image'),
+  upload.single("image"),
   (req, res) => {
-    res.status(201).json({data: req.body.id});
-  },
+    res.status(201).json({ data: req.body.id });
+  }
 );
 router.get(
-  '/:id',
+  "/:id",
   (req, res, next) => {
-    res.header('Cache-Control', `public, max-age=${3600 * 24 * 2}`);
+    res.header("Cache-Control", `public, max-age=${3600 * 24 * 2}`);
     next();
   },
-  express.static('./uploads'),
+  express.static("./uploads")
 );
 module.exports = router;
