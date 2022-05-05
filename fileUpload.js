@@ -4,7 +4,7 @@ const multer = require("multer");
 const shell = require("shelljs");
 const jwtcheck = require("./jwtcheck");
 const pool = require("./pool");
-let color = "#5D58C9";
+const fs = require("fs");
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, "./uploads");
@@ -77,12 +77,27 @@ router.post(
     } else res.status(400).json({ error: "you have no rights to upload" });
   },
   (req, res) => {
-    color = `#${req.params.hex}`;
-    res.status(201).json({ success: true });
+    let color = `#${req.params.hex}`;
+    fs.writeFile("/tmp/color", color, function(err) {
+      if (err) {
+        res.status(500).json({ error: "could not write to file" });
+      }
+      res.status(201).json({ success: true });
+    });
   }
 );
 router.get("/color", (req, res) => {
-  res.status(200).json({ color: color });
+  fs.readFile("/tmp/color", { encoding: "utf-8" }, (err, data) => {
+    console.log(err);
+    if (err) {
+      fs.writeFile("/tmp/color", "#5D58C9", function(err) {
+        if (err) res.status(500).json({ error: "could not read from file" });
+        res.status(201).json({ color: "#5D58C9" });
+      });
+    } else {
+      res.status(201).json({ color: data });
+    }
+  });
 });
 router.post(
   "/background",
