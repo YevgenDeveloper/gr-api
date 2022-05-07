@@ -88,7 +88,6 @@ router.post(
 );
 router.get("/color", (req, res) => {
   fs.readFile("/tmp/color", { encoding: "utf-8" }, (err, data) => {
-    console.log(err);
     if (err) {
       fs.writeFile("/tmp/color", "#5D58C9", function(err) {
         if (err) res.status(500).json({ error: "could not read from file" });
