@@ -142,7 +142,7 @@ const Event = {
   async fetch() {
     let genres;
     const res = await pool.query(
-      'select * from Events where ends_at::date > now()::date',
+      'select * from Events where ends_at::date >= now()::date',
     );
     await Promise.all(
       res.rows.map(async (row, i) => {
