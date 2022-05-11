@@ -12,7 +12,7 @@ router.get("/:offset", async (req, res) => {
     res.send(sounds.data);
   } catch {
     res.status(404).json({
-      error: "not found"
+      error: "not found",
     });
   }
 });
@@ -23,19 +23,20 @@ router.get("/tracks/:id", async (req, res) => {
     res.send(track.data);
   } catch {
     res.status(404).json({
-      error: "not found"
+      error: "not found",
     });
   }
 });
 router.post("/search", async (req, res) => {
-  console.log(req.body);
-  const link = `${api}search?q=odc-live%20${req.body.search}&client_id=${process.env.SND_ID}&limit=20&offset=${req.body.offset}`;
+  const link = `${api}search/tracks?q=odc-live&filter.genre_or_tag=${
+    req.body.search
+  }&client_id=${process.env.SND_ID}&limit=20&offset=${req.body.offset}`;
   try {
     const track = await axios.get(link);
     res.send(track.data);
   } catch {
     res.status(403).json({
-      error: "not found"
+      error: "not found",
     });
   }
 });
