@@ -34,20 +34,32 @@ const background_storage = multer.diskStorage({
     cb(null, "background");
   },
 });
+const background_mobile_storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "/tmp");
+  },
+  filename: function(req, file, cb) {
+    cb(null, "background_mobile");
+  },
+});
 const upload = multer({ storage: storage });
 const upload_insta = multer({ storage: insta_storage });
 const upload_background = multer({ storage: background_storage });
+const upload_background_mobile = multer({ storage: background_mobile_storage });
+async function checkJWT(req, res, next) {
+  const jwt = await jwtcheck({ req });
+  if (
+    jwt.authenticated &&
+    (jwt.user.role == "admin" || jwt.user.role == "mod")
+  ) {
+    next();
+  } else {
+    res.status(400).json({ error: "you don't have the rights to do this." });
+  }
+}
 router.post(
   "/insta",
-  async (req, res, next) => {
-    const jwt = await jwtcheck({ req });
-    if (
-      jwt.authenticated &&
-      (jwt.user.role == "admin" || jwt.user.role == "mod")
-    ) {
-      next();
-    } else res.status(400).json({ error: "you have no rights to upload" });
-  },
+  (req, res, next) => checkJWT(req, res, next),
   upload_insta.single("image"),
   (req, res) => {
     const date = req.body.date;
@@ -67,15 +79,7 @@ router.post(
 );
 router.post(
   "/color/:hex",
-  async (req, res, next) => {
-    const jwt = await jwtcheck({ req });
-    if (
-      jwt.authenticated &&
-      (jwt.user.role == "admin" || jwt.user.role == "mod")
-    ) {
-      next();
-    } else res.status(400).json({ error: "you have no rights to upload" });
-  },
+  (req, res, next) => checkJWT(req, res, next),
   (req, res) => {
     let color = `#${req.params.hex}`;
     fs.writeFile("/tmp/color", color, function(err) {
@@ -100,15 +104,7 @@ router.get("/color", (req, res) => {
 });
 router.post(
   "/background",
-  async (req, res, next) => {
-    const jwt = await jwtcheck({ req });
-    if (
-      jwt.authenticated &&
-      (jwt.user.role == "admin" || jwt.user.role == "mod")
-    ) {
-      next();
-    } else res.status(400).json({ error: "you have no rights to upload" });
-  },
+  (req, res, next) => checkJWT(req, res, next),
   upload_background.single("image"),
   (req, res) => {
     res.status(201).json({ success: true });
@@ -121,21 +117,50 @@ router.get("/background", (req, res) => {
     res.status(404).json({ error: "No background has been established" });
   }
 });
-router.delete("/background", (req, res) => {
-  shell.exec("rm /tmp/background", function(code, stdout, stderr) {
-    if (code != 0)
-      res.status(400).json({ error: "problem deleting the background" });
-    else res.status(200).json({ success: true });
-  });
+router.delete(
+  "/background",
+  (req, res, next) => checkJWT(req, res, next),
+  (req, res) => {
+    shell.exec("rm /tmp/background", function(code, stdout, stderr) {
+      if (code != 0)
+        res.status(400).json({ error: "problem deleting the background" });
+      else res.status(200).json({ success: true });
+    });
+  }
+);
+router.post(
+  "/background_mobile",
+  (req, res, next) => checkJWT(req, res, next),
+  upload_background_mobile.single("image"),
+  (req, res) => {
+    res.status(201).json({ success: true });
+  }
+);
+router.get("/background_mobile", (req, res) => {
+  try {
+    res.status(200).sendFile("/tmp/background_mobile");
+  } catch {
+    res
+      .status(404)
+      .json({ error: "No background mobile has been established" });
+  }
 });
+router.delete(
+  "/background_mobile",
+  (req, res, next) => checkJWT(req, res, next),
+  (req, res) => {
+    shell.exec("rm /tmp/background_mobile", function(code, stdout, stderr) {
+      if (code != 0)
+        res
+          .status(400)
+          .json({ error: "problem deleting the background mobile" });
+      else res.status(200).json({ success: true });
+    });
+  }
+);
 router.post(
   "/",
-  async (req, res, next) => {
-    const jwt = await jwtcheck({ req });
-    if (jwt.authenticated && jwt.user.role == "admin") {
-      next();
-    } else res.status(400).json({ error: "you have no rights to upload" });
-  },
+  (req, res, next) => checkJWT(req, res, next),
   upload.single("image"),
   (req, res) => {
     res.status(201).json({ data: req.body.id });
@@ -143,12 +168,7 @@ router.post(
 );
 router.put(
   "/",
-  async (req, res, next) => {
-    const jwt = await jwtcheck({ req });
-    if (jwt.authenticated && jwt.user.role == "admin") {
-      next();
-    } else res.status(400).json({ error: "you have no rights to upload" });
-  },
+  (req, res, next) => checkJWT(req, res, next),
   upload.single("image"),
   (req, res) => {
     res.status(201).json({ data: req.body.id });
