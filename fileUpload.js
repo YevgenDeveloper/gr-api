@@ -28,7 +28,7 @@ const insta_storage = multer.diskStorage({
 });
 const background_storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "/tmp");
+    cb(null, "/usr/src/app/uploads");
   },
   filename: function(req, file, cb) {
     cb(null, "background");
@@ -36,7 +36,7 @@ const background_storage = multer.diskStorage({
 });
 const background_mobile_storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "/tmp");
+    cb(null, "/usr/src/app/uploads");
   },
   filename: function(req, file, cb) {
     cb(null, "background_mobile");
@@ -91,16 +91,20 @@ router.post(
   }
 );
 router.get("/color", (req, res) => {
-  fs.readFile("/tmp/color", { encoding: "utf-8" }, (err, data) => {
-    if (err) {
-      fs.writeFile("/tmp/color", "#5D58C9", function(err) {
-        if (err) res.status(500).json({ error: "could not read from file" });
-        res.status(201).json({ color: "#5D58C9" });
-      });
-    } else {
-      res.status(201).json({ color: data });
+  fs.readFile(
+    "/usr/src/app/uploads/color",
+    { encoding: "utf-8" },
+    (err, data) => {
+      if (err) {
+        fs.writeFile("/usr/src/app/uploads/color", "#5D58C9", function(err) {
+          if (err) res.status(500).json({ error: "could not read from file" });
+          res.status(201).json({ color: "#5D58C9" });
+        });
+      } else {
+        res.status(201).json({ color: data });
+      }
     }
-  });
+  );
 });
 router.post(
   "/background",
@@ -112,7 +116,7 @@ router.post(
 );
 router.get("/background", (req, res) => {
   try {
-    res.status(200).sendFile("/tmp/background");
+    res.status(200).sendFile("/usr/src/app/uploads/background");
   } catch {
     res.status(404).json({ error: "No background has been established" });
   }
@@ -121,7 +125,11 @@ router.delete(
   "/background",
   (req, res, next) => checkJWT(req, res, next),
   (req, res) => {
-    shell.exec("rm /tmp/background", function(code, stdout, stderr) {
+    shell.exec("rm /usr/src/app/uploads/background", function(
+      code,
+      stdout,
+      stderr
+    ) {
       if (code != 0)
         res.status(400).json({ error: "problem deleting the background" });
       else res.status(200).json({ success: true });
@@ -138,7 +146,7 @@ router.post(
 );
 router.get("/background_mobile", (req, res) => {
   try {
-    res.status(200).sendFile("/tmp/background_mobile");
+    res.status(200).sendFile("/usr/src/app/uploads/background_mobile");
   } catch {
     res
       .status(404)
@@ -149,7 +157,11 @@ router.delete(
   "/background_mobile",
   (req, res, next) => checkJWT(req, res, next),
   (req, res) => {
-    shell.exec("rm /tmp/background_mobile", function(code, stdout, stderr) {
+    shell.exec("rm /usr/src/app/uploads/background_mobile", function(
+      code,
+      stdout,
+      stderr
+    ) {
       if (code != 0)
         res
           .status(400)
