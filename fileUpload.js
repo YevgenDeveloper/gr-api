@@ -5,9 +5,10 @@ const shell = require("shelljs");
 const jwtcheck = require("./jwtcheck");
 const pool = require("./pool");
 const fs = require("fs");
+const WDIR = "/usr/src/app/uploads";
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "./uploads");
+    cb(null, WDIR);
   },
   filename: async function(req, file, cb) {
     const split = file.originalname.split(".");
@@ -28,7 +29,7 @@ const insta_storage = multer.diskStorage({
 });
 const background_storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "/usr/src/app/uploads");
+    cb(null, WDIR);
   },
   filename: function(req, file, cb) {
     cb(null, "background");
@@ -36,7 +37,7 @@ const background_storage = multer.diskStorage({
 });
 const background_mobile_storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "/usr/src/app/uploads");
+    cb(null, WDIR);
   },
   filename: function(req, file, cb) {
     cb(null, "background_mobile");
@@ -55,6 +56,15 @@ async function checkJWT(req, res, next) {
     next();
   } else {
     res.status(400).json({ error: "you don't have the rights to do this." });
+  }
+}
+async function statFile(filePath) {
+  try {
+    if (fs.existsSync(filePath)) {
+      return 1;
+    }
+  } catch (err) {
+    throw Exception;
   }
 }
 router.post(
@@ -82,7 +92,7 @@ router.post(
   (req, res, next) => checkJWT(req, res, next),
   (req, res) => {
     let color = `#${req.params.hex}`;
-    fs.writeFile("/tmp/color", color, function(err) {
+    fs.writeFile(`${WDIR}/color`, color, function(err) {
       if (err) {
         res.status(500).json({ error: "could not write to file" });
       }
@@ -91,20 +101,16 @@ router.post(
   }
 );
 router.get("/color", (req, res) => {
-  fs.readFile(
-    "/usr/src/app/uploads/color",
-    { encoding: "utf-8" },
-    (err, data) => {
-      if (err) {
-        fs.writeFile("/usr/src/app/uploads/color", "#5D58C9", function(err) {
-          if (err) res.status(500).json({ error: "could not read from file" });
-          res.status(201).json({ color: "#5D58C9" });
-        });
-      } else {
-        res.status(201).json({ color: data });
-      }
+  fs.readFile(`${WDIR}/color`, { encoding: "utf-8" }, (err, data) => {
+    if (err) {
+      fs.writeFile(`${WDIR}/color`, "#5D58C9", function(errW) {
+        if (errW) res.status(500).json({ error: "could not read from file" });
+        res.status(201).json({ color: "#5D58C9" });
+      });
+    } else {
+      res.status(201).json({ color: data });
     }
-  );
+  });
 });
 router.post(
   "/background",
@@ -115,9 +121,9 @@ router.post(
   }
 );
 router.get("/background", (req, res) => {
-  try {
-    res.status(200).sendFile("/usr/src/app/uploads/background");
-  } catch {
+  if (fs.existsSync(`${WDIR}/background`)) {
+    res.status(200).sendFile(`${WDIR}/background`);
+  } else {
     res.status(404).json({ error: "No background has been established" });
   }
 });
@@ -125,13 +131,9 @@ router.delete(
   "/background",
   (req, res, next) => checkJWT(req, res, next),
   (req, res) => {
-    shell.exec("rm /usr/src/app/uploads/background", function(
-      code,
-      stdout,
-      stderr
-    ) {
+    shell.exec(`rm ${WDIR}/background`, function(code, stdout, stderr) {
       if (code != 0)
-        res.status(400).json({ error: "problem deleting the background" });
+        res.status(500).json({ error: "problem deleting the background" });
       else res.status(200).json({ success: true });
     });
   }
@@ -145,9 +147,9 @@ router.post(
   }
 );
 router.get("/background_mobile", (req, res) => {
-  try {
-    res.status(200).sendFile("/usr/src/app/uploads/background_mobile");
-  } catch {
+  if (fs.existsSync(`${WDIR}/background_mobile`)) {
+    res.status(200).sendFile(`${WDIR}/background_mobile`);
+  } else {
     res
       .status(404)
       .json({ error: "No background mobile has been established" });
@@ -157,11 +159,7 @@ router.delete(
   "/background_mobile",
   (req, res, next) => checkJWT(req, res, next),
   (req, res) => {
-    shell.exec("rm /usr/src/app/uploads/background_mobile", function(
-      code,
-      stdout,
-      stderr
-    ) {
+    shell.exec(`rm ${WDIR}/background_mobile`, function(code, stdout, stderr) {
       if (code != 0)
         res
           .status(400)
@@ -192,6 +190,6 @@ router.get(
     res.header("Cache-Control", `public, max-age=${3600 * 24 * 2}`);
     next();
   },
-  express.static("./uploads")
+  express.static(WDIR)
 );
 module.exports = router;
