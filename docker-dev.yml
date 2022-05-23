@@ -22,7 +22,7 @@ services:
       API_WEBSITE: http://localhost:8081
       SND_ID: CLIENTID
     volumes:
-      - /opt/odclive/uploads:/app/uploads
+      - /opt/odclive/uploads:/usr/src/app/uploads
       - ./:/app
     ports:
       - 8081:4000
