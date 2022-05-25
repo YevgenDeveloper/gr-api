@@ -1,9 +1,12 @@
 [submodule "chat"]
-	path = chat
+	path = submodules/chat
 	url = git@gitlab.com:odclive/chat.git
 [submodule "cli"]
-	path = cli
+	path = submodules/cli
 	url = git@gitlab.com:odclive/cli.git
 [submodule "admin"]
-	path = admin
+	path = submodules/admin
 	url = git@gitlab.com:odclive/admin.git
+[submodule "submodules/submodules/layouts"]
+	path = submodules/layouts
+	url = git@gitlab.com:odclive/layouts.git

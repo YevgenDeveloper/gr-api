@@ -78,7 +78,7 @@ router.post(
     const artist = req.body.artist;
     const color = req.body.color;
     shell.exec(
-      `cd layouts && ./layout.sh /tmp/insta_pic ${date} ${month} "${artist}" "${title}" ${color}`,
+      `cd submodules/layouts && ./layout.sh /tmp/insta_pic ${date} ${month} "${artist}" "${title}" ${color}`,
       function(code, stdout, stderr) {
         if (code != 0)
           res.status(400).json({ error: "problem converting the picture" });

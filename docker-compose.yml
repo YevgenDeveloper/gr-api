@@ -27,7 +27,7 @@ services:
     ports:
       - 8081:4000
   chat:
-    build: ./chat
+    build: ./submodules/chat
     environment:
       DB_HOST: db
       DB_NAME: odclive
@@ -37,18 +37,10 @@ services:
     ports:
       - 8080:8080
   admin:
-    build: ./admin
+    build: ./submodules/admin
     ports:
       - 8082:5000
   cli:
-    build: ./vuedev
-    volumes:
-      - ./cli:/app
+    build: ./submodules/cli
     ports:
       - 8083:8080
-  app:
-    build: ./vuedev
-    volumes:
-      - ./app:/app
-    ports:
-      - 8084:8080
