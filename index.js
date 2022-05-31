@@ -1,10 +1,10 @@
 const express = require('express');
 const {ApolloServer, gql} = require('apollo-server-express');
-const jwtcheck = require('./jwtcheck');
-const resolvers = require('./resolvers');
-const models = require('./models');
-const fileUpload = require('./fileUpload');
-const soundcloud = require('./soundcloud');
+const jwtcheck = require('./src/jwtcheck');
+const resolvers = require('./src/resolvers');
+const models = require('./src/models');
+const fileUpload = require('./src/fileUpload');
+const soundcloud = require('./src/soundcloud');
 const typeDefs = gql`
   type File {
     filename: String!
