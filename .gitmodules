@@ -7,6 +7,6 @@
 [submodule "admin"]
 	path = submodules/admin
 	url = git@gitlab.com:odclive/admin.git
-[submodule "submodules/submodules/layouts"]
+[submodule "layouts"]
 	path = submodules/layouts
 	url = git@gitlab.com:odclive/layouts.git
