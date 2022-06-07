@@ -87,6 +87,9 @@ router.post(
     );
   }
 );
+router.get("/insta", (req, res) => {
+  res.status(201).sendFile("/tmp/output.png");
+});
 router.post(
   "/color/:hex",
   (req, res, next) => checkJWT(req, res, next),
