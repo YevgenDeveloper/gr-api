@@ -68,7 +68,7 @@ async function statFile(filePath) {
   }
 }
 router.post(
-  "/insta",
+  "/insta.png",
   (req, res, next) => checkJWT(req, res, next),
   upload_insta.single("image"),
   (req, res) => {
@@ -87,8 +87,8 @@ router.post(
     );
   }
 );
-router.get("/insta", (req, res) => {
-  res.status(201).sendFile("/tmp/output.png");
+router.get("/insta.png", (req, res) => {
+  res.sendFile("/tmp/output.png");
 });
 router.post(
   "/color/:hex",
