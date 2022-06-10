@@ -28,9 +28,10 @@ router.get("/tracks/:id", async (req, res) => {
   }
 });
 router.post("/search", async (req, res) => {
-  const link = `${api}search/tracks?q=odc-live&filter.genre_or_tag=${
+  let offset = req.body.offset ? req.body.offset : 0;
+  const link = `https:
     req.body.search
-  }&client_id=${process.env.SND_ID}&limit=20&offset=${req.body.offset}`;
+  }&client_id=${process.env.SND_ID}&limit=20&offset=${offset}`;
   try {
     const track = await axios.get(link);
     res.send(track.data);
