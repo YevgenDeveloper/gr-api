@@ -10,3 +10,6 @@
 [submodule "layouts"]
 	path = submodules/layouts
 	url = git@gitlab.com:odclive/layouts.git
+[submodule "submodules/ssr_proxy"]
+	path = submodules/ssr_proxy
+	url = git@gitlab.com:odclive/ssr_proxy.git
