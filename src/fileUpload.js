@@ -74,8 +74,8 @@ router.post(
   (req, res) => {
     const date = req.body.date;
     const month = req.body.month;
-    const title = req.body.title;
-    const artist = req.body.artist;
+    const title = req.body.title.replace(/(["\s'$`\\])/g,'\\$1');;
+    const artist = req.body.artist.replace(/(["\s'$`\\])/g,'\\$1');;
     const color = req.body.color;
     shell.exec(
       `cd submodules/layouts && ./layout.sh /tmp/insta_pic ${date} ${month} "${artist}" "${title}" ${color}`,
