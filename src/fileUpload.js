@@ -68,27 +68,27 @@ async function statFile(filePath) {
   }
 }
 router.post(
-  "/insta.png",
+  "/insta.jpg",
   (req, res, next) => checkJWT(req, res, next),
   upload_insta.single("image"),
   (req, res) => {
-    const date = req.body.date;
-    const month = req.body.month;
-    const title = req.body.title.replace(/(["'$`\\])/g,'\\$1');;
-    const artist = req.body.artist.replace(/(["'$`\\])/g,'\\$1');;
+    const date = req.body.date < 10 ? `0${req.body.date}` : req.body.date;
+    const month = req.body.month < 10 ? `0${req.body.month}` : req.body.month;
+    const title = req.body.title.replace(/(["'$`\\])/g, "\\$1");
+    const artist = req.body.artist.replace(/(["'$`\\])/g, "\\$1");
     const color = req.body.color;
     shell.exec(
-      `cd submodules/layouts && ./layout.sh /tmp/insta_pic ${date} ${month} "${artist}" "${title}" ${color}`,
+      `cd submodules/layouts && ./layout.sh /tmp/insta_pic "${date}/${month}" "${artist}" "${title}" ${color}`,
       function(code, stdout, stderr) {
         if (code != 0)
           res.status(400).json({ error: "problem converting the picture" });
-        else res.status(201).sendFile("/tmp/output.png");
+        else res.status(201).sendFile("/tmp/output.jpg");
       }
     );
   }
 );
-router.get("/insta.png", (req, res) => {
-  res.sendFile("/tmp/output.png");
+router.get("/insta.jpg", (req, res) => {
+  res.sendFile("/tmp/output.jpg");
 });
 router.post(
   "/color/:hex",
