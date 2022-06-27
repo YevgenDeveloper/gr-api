@@ -6,5 +6,5 @@ RUN apk add gimp
 COPY index.js ./
 COPY src ./src
 COPY uploads ./
-COPY submodules/layouts/GIMP/* /root/.gimp-2.8/scripts
+COPY submodules/layouts/GIMP/scripts/ /root/.gimp-2.8/scripts/
 CMD [ "node", "index"]
