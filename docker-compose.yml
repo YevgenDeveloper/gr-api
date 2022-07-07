@@ -8,6 +8,8 @@ services:
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - web
   api:
     build: .
     environment:
@@ -26,8 +28,13 @@ services:
       - /opt/odclive/uploads:/usr/src/app/uploads
       - ./submodules:/usr/src/app/submodules/
       - ${FONTS_DIR}:/root/.fonts
-    ports:
-      - 8081:4000
+    labels:
+      - traefik.http.routers.api.rule=Host(`api.odc.live`)
+      - traefik.http.routers.api.tls=true
+      - traefik.http.routers.api.tls.certresolver=le
+      - traefik.http.services.api.loadbalancer.server.port=4000
+    networks:
+      - web
   chat:
     build: ./submodules/chat
     environment:
@@ -36,19 +43,40 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_PORT: ${DB_PORT}
-    ports:
-      - 8080:8080
+    labels:
+      - traefik.http.routers.chat.rule=Host(`chat.odc.live`)
+      - traefik.http.routers.chat.tls=true
+      - traefik.http.routers.chat.tls.certresolver=le
+      - traefik.http.services.chat.loadbalancer.server.port=8080
+    networks:
+      - web
   admin:
     build: ./submodules/admin
-    ports:
-      - 8082:5000
+    labels:
+      - traefik.http.routers.admin.rule=Host(`admin.odc.live`)
+      - traefik.http.routers.admin.tls=true
+      - traefik.http.routers.admin.tls.certresolver=le
+      - traefik.http.services.admin.loadbalancer.server.port=3000
+    networks:
+      - web
   cli:
     build: ./submodules/cli
-    ports:
-      - 8083:8080
+    networks:
+      - web
   ssr_proxy:
     build: ./submodules/ssr_proxy
-    ports:
-      - 8085:8080
     environment:
       TARGET_SRV: cli
+    labels:
+      - traefik.http.routers.web.rule=Host(`odc.live`, `www.odc.live`)
+      - traefik.http.routers.web.tls=true
+      - traefik.http.routers.web.tls.certresolver=le
+      - traefik.http.middlewares.redir.redirectregex.regex=^https://www.odc.live/(.*)
+      - traefik.http.middlewares.redir.redirectregex.replacement=https://odc.live/$${1}
+      - traefik.http.middlewares.redir.redirectregex.permanent=true
+      - traefik.http.routers.web.middlewares=redir
+    networks:
+      - web
+networks:
+  web:
+    external: true
