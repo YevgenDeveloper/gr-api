@@ -66,7 +66,7 @@ services:
   ssr_proxy:
     build: ./submodules/ssr_proxy
     environment:
-      TARGET_SRV: cli
+      TARGET_SRV: ${TARGET_SRV}
     labels:
       - traefik.http.routers.web.rule=Host(`odc.live`, `www.odc.live`)
       - traefik.http.routers.web.tls=true

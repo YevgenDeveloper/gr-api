@@ -54,4 +54,4 @@ services:
     ports:
       - 8085:8080
     environment:
-      TARGET_SRV: localhost:80
+      TARGET_SRV: ${TARGET_SRV}
