@@ -12,6 +12,7 @@ services:
       - web
   api:
     build: .
+    restart: always
     environment:
       DB_HOST: db
       DB_NAME: ${DB_DATABASE}
