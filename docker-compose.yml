@@ -66,6 +66,7 @@ services:
       - web
   ssr_proxy:
     build: ./submodules/ssr_proxy
+    restart: always
     environment:
       TARGET_SRV: ${TARGET_SRV}
     labels:
