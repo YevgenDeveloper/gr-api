@@ -30,7 +30,7 @@ services:
       - ./submodules:/usr/src/app/submodules/
       - ${FONTS_DIR}:/root/.fonts
     labels:
-      - traefik.http.routers.api.rule=Host(`api.odc.live`)
+      - traefik.http.routers.api.rule=Host(`api.zest.radio`)
       - traefik.http.routers.api.tls=true
       - traefik.http.routers.api.tls.certresolver=le
       - traefik.http.services.api.loadbalancer.server.port=4000
@@ -45,7 +45,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_PORT: ${DB_PORT}
     labels:
-      - traefik.http.routers.chat.rule=Host(`chat.odc.live`)
+      - traefik.http.routers.chat.rule=Host(`chat.zest.radio`)
       - traefik.http.routers.chat.tls=true
       - traefik.http.routers.chat.tls.certresolver=le
       - traefik.http.services.chat.loadbalancer.server.port=8080
@@ -54,7 +54,7 @@ services:
   admin:
     build: ./submodules/admin
     labels:
-      - traefik.http.routers.admin.rule=Host(`admin.odc.live`)
+      - traefik.http.routers.admin.rule=Host(`admin.zest.radio`)
       - traefik.http.routers.admin.tls=true
       - traefik.http.routers.admin.tls.certresolver=le
       - traefik.http.services.admin.loadbalancer.server.port=3000
@@ -70,11 +70,11 @@ services:
     environment:
       TARGET_SRV: ${TARGET_SRV}
     labels:
-      - traefik.http.routers.web.rule=Host(`odc.live`, `www.odc.live`)
+      - traefik.http.routers.web.rule=Host(`zest.radio`, `www.zest.radio`)
       - traefik.http.routers.web.tls=true
       - traefik.http.routers.web.tls.certresolver=le
-      - traefik.http.middlewares.redir.redirectregex.regex=^https://www.odc.live/(.*)
-      - traefik.http.middlewares.redir.redirectregex.replacement=https://odc.live/$${1}
+      - traefik.http.middlewares.redir.redirectregex.regex=^https://www.zest.radio/(.*)
+      - traefik.http.middlewares.redir.redirectregex.replacement=https://zest.radio/$${1}
       - traefik.http.middlewares.redir.redirectregex.permanent=true
       - traefik.http.routers.web.middlewares=redir
     networks:

@@ -20,7 +20,7 @@ router.get("/tracks/:id", async (req, res) => {
   const link = `${api}tracks/${req.params.id}${client}`;
   try {
     const track = await axios.get(link);
-    if (track.data.user.permalink != "odc-live") {
+    if (track.data.user.permalink != "zoneestradio") {
       res.status(404).json({
         error: "not found",
       });
