@@ -42,6 +42,19 @@ const typeDefs = gql`
     image: String
     added_by: User
   }
+  type Resident {
+    id: String
+    name: String
+    description: String
+    facebook: String
+    instagram: String
+    raco: String
+    soundcloud: String
+    bandcamp: String
+    website: String
+    image: String
+    added_by: User
+  }
   type Tag {
     url: String
     name: String
@@ -70,6 +83,8 @@ const typeDefs = gql`
     today_shows(start: String!): [Show]
     Events: [Event]
     Event(id: String): Event
+    Residents: [Resident]
+    Resident(name: String): Resident
     Stream: Stream
     Mixes: Mixes
     PrintShows: Boolean
@@ -119,7 +134,29 @@ const typeDefs = gql`
       genres: [String]
       facebook: String
     ): String
+    add_resident(
+      name: String!
+      description: String
+      facebook: String
+      instagram: String
+      raco: String
+      soundcloud: String
+      bandcamp: String
+      website: String
+    ): String
+    modify_resident(
+      id: String!
+      name: String!
+      description: String
+      facebook: String
+      instagram: String
+      raco: String
+      soundcloud: String
+      bandcamp: String
+      website: String
+    ): String
     delete_event(id: String!): String
+    delete_resident(id: String!): String
     print_events(state: Boolean!): Boolean
     print_shows(state: Boolean!): Boolean
   }

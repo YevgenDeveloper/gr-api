@@ -53,3 +53,16 @@ INSERT INTO Roles(name, permissions) VALUES ('mod', 75);
 INSERT INTO Roles(name, permissions) VALUES ('dj', 50);
 INSERT INTO Prints(id, status) VALUES ('events', true);
 INSERT INTO Prints(id, status) VALUES ('shows', true);
+CREATE TABLE Residents(
+  id UUID PRIMARY KEY,
+  name TEXT,
+  description TEXT,
+  facebook TEXT,
+  instagram TEXT,
+  raco TEXT,
+  soundcloud TEXT,
+  bandcamp TEXT,
+  website TEXT,
+  imgformat VARCHAR(4),
+  added_by UUID references Users(id)
+);

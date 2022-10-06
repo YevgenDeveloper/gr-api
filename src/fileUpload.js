@@ -16,6 +16,10 @@ const storage = multer.diskStorage({
       split[split.length - 1],
       req.body.id,
     ]);
+    await pool.query("UPDATE Residents SET imgformat = $1 WHERE id = $2;", [
+      split[split.length - 1],
+      req.body.id,
+    ]);
     cb(null, `${req.body.id}.${split[split.length - 1]}`);
   },
 });
