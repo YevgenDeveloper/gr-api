@@ -254,7 +254,7 @@ const Resident = {
     return res.rows[0];
   },
   async fetchall() {
-    const res = await pool.query("select * from Residents order by name ASC;");
+    const res = await pool.query("select * from Residents order by upper(name) ASC;");
     await Promise.all(
       res.rows.map(async (row, i) => {
         row.image = `${api}/upload/${row.id}.${row.imgformat}`;
