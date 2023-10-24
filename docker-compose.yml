@@ -38,6 +38,7 @@ services:
       - web
   chat:
     build: ./submodules/chat
+    restart: always
     environment:
       DB_HOST: db
       DB_NAME: ${DB_DATABASE}
@@ -53,6 +54,7 @@ services:
       - web
   admin:
     build: ./submodules/admin
+    restart: always
     labels:
       - traefik.http.routers.admin.rule=Host(`admin.zest.radio`)
       - traefik.http.routers.admin.tls=true
@@ -62,6 +64,7 @@ services:
       - web
   cli:
     build: ./submodules/cli
+    restart: always
     networks:
       - web
   ssr_proxy:
