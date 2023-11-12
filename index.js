@@ -31,6 +31,16 @@ const typeDefs = gql`
     genres: [String]
     added_by: User
   }
+  type GoogleCalendarShows {
+    id: String
+    name: String
+    starts_at: String
+    ends_at: String
+    redundancy: Int
+    dj: String
+    genres: [String]
+    added_by: User
+  }
   type Event {
     id: String
     name: String
@@ -80,6 +90,7 @@ const typeDefs = gql`
     User(id: String): User
     Users: [User]
     Shows(start: String!): [Show]
+    GoogleCalendarShows(start: String!, end: String): [GoogleCalendarShows]
     today_shows(start: String!): [Show]
     Events: [Event]
     Event(id: String): Event

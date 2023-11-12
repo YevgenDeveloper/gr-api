@@ -30,6 +30,13 @@ module.exports = {
       }
       return models.Show.fetch({ start });
     },
+    GoogleCalendarShows: (_, { start, end }) => {
+      const s = new Date(start);
+      if (s === "Invalid Date" || isNaN(s)) {
+        throw new Error("Please enter valid dates");
+      }
+      return models.GoogleCalendarShows.fetch({ start, end });
+    },
     Events: (_, {}) => {
       return models.Event.fetch();
     },
